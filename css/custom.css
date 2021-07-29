@@ -1,0 +1,50 @@
+/* SIZE */
+
+.spacer-25{
+	height: 25px;
+}
+
+.spacer-75{
+	height: 75px;
+}
+
+.full-width{
+	width: 100%;
+}
+
+
+/* COLORS */
+
+body{
+	background-color: #72b5ff;
+}
+
+.bg-lgrey{
+	background-color: #e9ecef;
+}
+
+.bg-grey{
+	background-color: lightgrey;
+}
+
+.bg-white{
+	background-color: white;
+}
+
+
+
+/* LOCATION */
+
+.sticky-top{
+	position: webkit-sticky; /* SAFARI */
+	position: sticky;
+	top: 0;
+	z-index: 10;
+}
+
+.sticky-left{
+	position: webkit-sticky; /* SAFARI */
+	position: sticky;
+	left: 0;
+	z-index: 10;
+}
