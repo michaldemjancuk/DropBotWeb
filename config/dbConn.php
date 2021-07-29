@@ -10,7 +10,7 @@ class DbConn
 
 	public function GetConnection()
 	{
-		$DbConnString = "mysql:host=localhost;dbname=portal";
+		$DbConnString = "mysql:host=localhost;dbname=dropbot";
 		$DbUsername = "root";
 		$DbPassword = "";
 		//return new PDO($DbConnString, $DbUsername, $DbPassword);

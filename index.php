@@ -9,10 +9,6 @@ $auth = new Authenticator();
 $users = new Users();
 $auth->Required_User();
 
-if($users->IsSupervisor($auth->GetUserId())){
-  echo "<script>if(window.name == 'targetWindow') { close(); } else { window.location.href = '/overviews/forFactoryLine.php'; }</script>";
-}
-
 ?>
 <!doctype html>
 <html lang="cs">
@@ -45,28 +41,34 @@ if($users->IsSupervisor($auth->GetUserId())){
           <div class="sidebar-sticky position-fixed">
             <ul class="nav flex-column">
               <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-                <span>&Uacute;dr&#382;ba
+                <span>Dropbot
 <?php 
 if($auth->IsAdmin()) { 
-  echo '[<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-award"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>]';
+  echo '[<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-award"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg> <i>Admin</i> ]';
   echo "<li class='nav-item btn-light'>
-    <a class='nav-link' onclick='document.getElementById(&quot;iframeContent&quot;).src =&quot;repairsToConfirm.php&quot;'>
+    <a class='nav-link' onclick='document.getElementById(&quot;iframeContent&quot;).src =&quot;xxxxxxxxxxxxx.php&quot;;'>
     <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-award'><circle cx='12' cy='8' r='7'></circle><polyline points='8.21 13.89 7 23 12 20 17 23 15.79 13.88'></polyline></svg>
-    &Uacute;dr&#382;by k potvrzen&iacute;
+    Spravovat dropy
     </a>
     </li>"; 
     echo "<li class='nav-item btn-light'>
-    <a class='nav-link btn-light' href='overview.php' target='_blank'>
+    <a class='nav-link' onclick='document.getElementById(&quot;iframeContent&quot;).src =&quot;xxxxxxxxxxxxx.php&quot;;'>
     <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-file'><path d='M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z'></path><polyline points='13 2 13 9 20 9'></polyline></svg>
-    P&#345;ehled &uacute;dr&#382;by
+    Vytvořit drop
     </a>
     </li>";  
 } else {
   echo "
     <li class='nav-item btn-light'>
-    <a class='nav-link' onclick='document.getElementById(&quot;iframeContent&quot;).src =&quot;myRepairs.php&quot;;'>
+    <a class='nav-link' onclick='document.getElementById(&quot;iframeContent&quot;).src =&quot;xxxxxxxxxxxxx.php&quot;;'>
     <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-file'><path d='M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z'></path><polyline points='13 2 13 9 20 9'></polyline></svg>
-    M&aacute; údr&#382;ba
+    Upload image
+    </a>
+    </li>
+    <li class='nav-item btn-light'>
+    <a class='nav-link' onclick='document.getElementById(&quot;iframeContent&quot;).src =&quot;xxxxxxxxxxxxx.php&quot;;'>
+    <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-file'><path d='M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z'></path><polyline points='13 2 13 9 20 9'></polyline></svg>
+    My drops
     </a>
     </li>";
 } ?>
@@ -86,44 +88,6 @@ if($auth->IsAdmin()) {
     <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-user'><path d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/><circle cx='12' cy='7' r='4'/></svg>
     U&#382;ivatel&eacute;
     </a>
-    </li>";
-    if($auth->GetUserId() == 24572 || $auth->GetUserId() == 99999)
-    {
-      echo "<li class='nav-item btn-light'>
-        <a class='nav-link' onclick='document.getElementById(&quot;iframeContent&quot;).src =&quot;supervisors.php&quot;;'>
-        <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-user'><path d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/><circle cx='12' cy='7' r='4'/></svg>
-        Supervisors
-        </a>
-        </li>";
-    }
-  echo "<li class='nav-item btn-light'>
-      <a class='nav-link' onclick='document.getElementById(&quot;iframeContent&quot;).src =&quot;orders.php&quot;;'>
-          <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-file-text'><path d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/><polyline points='14 2 14 8 20 8'/><line x1='16' y1='13' x2='8' y2='13'/><line x1='16' y1='17' x2='8' y2='17'/><polyline points='10 9 9 9 8 9'/></svg>
-        Zak&aacute;zky
-      </a>
-    </li>
-    <li class='nav-item btn-light'>
-      <a class='nav-link' onclick='document.getElementById(&quot;iframeContent&quot;).src =&quot;orderGroups.php&quot;;'>
-          <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-file-text'><path d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/><polyline points='14 2 14 8 20 8'/><line x1='16' y1='13' x2='8' y2='13'/><line x1='16' y1='17' x2='8' y2='17'/><polyline points='10 9 9 9 8 9'/></svg>
-        Skupiny zak&aacute;zek
-      </a>
-    </li>
-    <li class='nav-item btn-light'>
-      <a class='nav-link' onclick='document.getElementById(&quot;iframeContent&quot;).src =&quot;departments.php&quot;;'>
-          <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-briefcase'><rect x='2' y='7' width='20' height='14' rx='2' ry='2'/><path d='M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16'/></svg>
-        Odd&#283;len&iacute;
-      </a>
-    </li><li class='nav-item btn-light'>
-      <a class='nav-link' onclick='document.getElementById(&quot;iframeContent&quot;).src =&quot;import.php&quot;;'>
-          <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-upload'><path d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'/><polyline points='17 8 12 3 7 8'/><line x1='12' y1='3' x2='12' y2='15'/></svg>
-        Import
-      </a>
-    </li>
-    </li><li class='nav-item btn-light'>
-      <a class='nav-link' onclick='document.getElementById(&quot;iframeContent&quot;).src =&quot;export.php&quot;;'>
-          <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-download'><path d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'/><polyline points='7 10 12 15 17 10'/><line x1='12' y1='15' x2='12' y2='3'/></svg>
-        Export
-      </a>
     </li>";
 }
 ?>
