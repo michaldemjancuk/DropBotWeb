@@ -13,6 +13,11 @@ if($auth->IsLoggedIn())
 	header('Location: index.php', TRUE, 302);
 }
 
+if(!empty($_GET['result']))
+{
+		echo '<script>alert("Message: ' . $_GET['result'] . '");</script>';
+}
+
 if(!empty($_POST['type']))
 {
 	if ($_POST["type"] == "login") 
@@ -33,28 +38,21 @@ function ClassicLogin()
 {
 	$users = new Users();
 
-	if($users->CheckAccountExists($_POST['id']))
+	if($users->CheckAccountExists($_POST['username']))
 	{
-		if (!$users->CheckPasswordExists($_POST['id']))
-		{
-			echo '<script>alert("Účet s tímto ID (' . $_POST['id'] . ') ještě nemá nastaveno heslo, přihlaste se prosím skrze formulář: "První přihlášení" !");</script>';
-		}
-		else
-		{
-			$usersPass = $users->GetPasswordHash($_POST['id']);
-			$notEnc = $_POST['password'];
-			$passwordHash = password_hash($notEnc, PASSWORD_DEFAULT);
-			if(password_verify($notEnc, $usersPass)){
-				$auth = new Authenticator();
-				$auth->LogIn($_POST['id'], $passwordHash);
-			} else {
-				echo "<script>alert('Nesprávné heslo!');</script>";
-			}
+		$usersPass = $users->GetPasswordHash($_POST['username']);
+		$notEnc = $_POST['password'];
+		$passwordHash = password_hash($notEnc, PASSWORD_DEFAULT);
+		if(password_verify($notEnc, $usersPass)){
+			$auth = new Authenticator();
+			$auth->LogIn($_POST['username'], $passwordHash);
+		} else {
+			echo "<script>alert('Wrong password!');</script>";
 		}
 	}
 	else
 	{
-		echo '<script>alert("Účet s tímto ID (' . $_POST['id'] . ') neexistuje !");</script>';
+		echo '<script>alert("Account with username (' . $_POST['id'] . ') does not exist !");</script>';
 	}
 }
 
@@ -93,7 +91,7 @@ function FirstLogin()
 <!DOCTYPE html>
 <html lang="cs" style="height: 100%">
 <head>
-	<title>Port&aacute;l &uacute;dr&#382;by</title>
+	<title>ShotBot</title>
     <meta charset="utf-8" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -139,17 +137,17 @@ function FirstLogin()
 						
 						<span class="spacer-25"></span>
 
-						<form class="mb-3">
+						<form method="post" action="" class="mb-3">
 							<div class="row mb-3">
-								<label for="inputEmail3" class="col-sm-2 col-form-label">Username</label>
+								<label for="username" class="col-sm-2 col-form-label">Username</label>
 								<div class="col-sm-10">
-									<input type="email" class="form-control" id="inputEmail3">
+									<input type="text" class="form-control" name="username">
 								</div>
 							</div>
 							<div class="row mb-3">
-								<label for="inputPassword3" class="col-sm-2 col-form-label">Password</label>
+								<label for="password" class="col-sm-2 col-form-label">Password</label>
 								<div class="col-sm-10">
-									<input type="password" class="form-control" id="inputPassword3">
+									<input type="password" class="form-control" name="password">
 								</div>
 							</div>
 							<button type="submit" class="btn btn-primary">Sign in</button>
@@ -165,38 +163,53 @@ function FirstLogin()
 						
 						<span class="spacer-25"></span>
 
-						<form class="mb-3">
+						<form method="post" action="actions/register.php" class="mb-3">
 							<div class="row mb-3">
 								<label for="username" class="col-sm-2 col-form-label">Username</label>
 								<div class="col-sm-10">
-									<input type="username" class="form-control" id="username">
+									<input type="text" class="form-control" id="username" name="username" minlength="5" required>
 								</div>
 							</div>
 							<div class="row mb-3">
 								<label for="email" class="col-sm-2 col-form-label">Email</label>
 								<div class="col-sm-10">
-									<input type="email" class="form-control" id="email">
+									<input type="email" class="form-control" name="email" required>
 								</div>
 							</div>
 							<div class="row mb-3">
 								<label for="password" class="col-sm-2 col-form-label">Password</label>
 								<div class="col-sm-10">
-									<input type="password" class="form-control" id="password">
+									<input type="password" class="form-control" name="password"
+						                data-bv-identical="true"
+						                data-bv-identical-field="confirmPassword"
+						                data-bv-identical-message="The password and its confirm are not the same"
+						                minlength="5" 
+						                required />
 								</div>
 							</div>
 							<div class="row mb-3">
-								<label for="password2" class="col-sm-2 col-form-label"></label>
+								<label for="confirmPassword" class="col-sm-2 col-form-label">Confirm password</label>
 								<div class="col-sm-10">
-									<input type="password" class="form-control" id="password2">
+						            <input type="password" class="form-control" name="confirmPassword"
+						                data-bv-identical="true"
+						                data-bv-identical-field="password"
+						                data-bv-identical-message="The password and its confirm are not the same" 
+						                required />
 								</div>
 							</div>
 							<div class="row mb-3">
 								<label for="birth" class="col-sm-2 col-form-label">Birth date</label>
 								<div class="col-sm-10">
-									<input type="date"  class="form-control" id="birth">
+									<input type="date"  class="form-control" name="birth" required>
 								</div>
 							</div>
-							<button type="submit" class="btn btn-primary">Sign in</button>
+							<div class="row mb-3">
+								<label for="pageUrl" class="col-sm-2 col-form-label">Publication page URL:</label>
+								<div class="col-sm-10">
+									<input type="url"  class="form-control" name="pageUrl">
+								</div>
+							</div>
+							<button type="submit" class="btn btn-primary">Register account</button>
 						</form>
 
 					</div>
