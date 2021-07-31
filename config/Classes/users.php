@@ -20,7 +20,7 @@ class Users
 		}
 		$Hash = password_hash($Id, PASSWORD_DEFAULT);
 		$dbConn = new DbConn();
-		$sql = "INSERT INTO `Users`(Id, FirstName, LastName, IsAdmin, Shift, Hash) VALUES (?, ?, ?, ?, ?, ?)";
+		$sql = "INSERT INTO `users`(Id, FirstName, LastName, IsAdmin, Shift, Hash) VALUES (?, ?, ?, ?, ?, ?)";
 		$pdo = $dbConn->GetConnection();
 		$stmt= $pdo->prepare($sql);
 		$stmt->execute([$Id, $FirstName, $LastName, $IsAdmin, $Shift, $Hash]);
@@ -80,7 +80,7 @@ class Users
 	{
 		$dbConn = new DbConn(); 
 		$pdo = $dbConn->GetConnection();
-		$data = $pdo->query("SELECT * FROM Users WHERE Id = " . $Id)->fetchAll();
+		$data = $pdo->query("SELECT * FROM users WHERE Id = " . $Id)->fetchAll();
 		return $data[0];
 	}
 
@@ -88,28 +88,44 @@ class Users
 	{
 		$dbConn = new DbConn();
 		$pdo = $dbConn->GetConnection();
-		$sql = "DELETE FROM Users Where Id = ?";
+		$sql = "DELETE FROM users Where Id = ?";
 		$stmt= $pdo->prepare($sql);
 		$stmt->execute([$Id]);
 	}
 
-	public function VerifiedLogin($Id, $Hash)
+	public function VerifiedLogin($username, $Hash)
 	{
-		$CalcHash = password_hash($Id, PASSWORD_DEFAULT);
+		$CalcHash = password_hash($username, PASSWORD_DEFAULT);
 		$dbConn = new DbConn(); 
 		$pdo = $dbConn->GetConnection();
-		$data = $pdo->query("SELECT * FROM Users WHERE Id = " . $Id)->fetchAll();
+		$data = $pdo->query("SELECT * FROM users WHERE username = '" . $username . "'")->fetchAll();
 		$DbHash = $data[0]['Password'];
 		return 	password_verify($Hash, $DbHash) != '1' || 
 				password_verify($Hash, $CalcHash) != '1';
 	}
 
-	public function GetPasswordHash($Id)
+	public function GetPasswordHash($username)
 	{
 		$dbConn = new DbConn(); 
 		$pdo = $dbConn->GetConnection();
-		$data = $pdo->query("SELECT * FROM Users WHERE Id = " . $Id)->fetchAll();
+		$data = $pdo->query("SELECT * FROM users WHERE username = '" . $username . "'")->fetchAll();
 		return $data[0]['Password'];
+	}
+
+	public function GetRightsPermissionGroup($username)
+	{
+		$dbConn = new DbConn(); 
+		$pdo = $dbConn->GetConnection();
+		$data = $pdo->query("SELECT PermissionLevel FROM users WHERE username = '" . $username . "'")->fetchAll();
+		return $data[0][0];
+	}
+
+	public function CheckAccountExists($username)
+	{
+		$dbConn = new DbConn(); 
+		$pdo = $dbConn->GetConnection();
+		$data = $pdo->query("SELECT Id FROM users WHERE username = '" . $username . "'")->fetchAll();
+		return count($data) > 0;
 	}
 }
 

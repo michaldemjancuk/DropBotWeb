@@ -18,23 +18,8 @@ if(!empty($_GET['result']))
 		echo '<script>alert("Message: ' . $_GET['result'] . '");</script>';
 }
 
-if(!empty($_POST['type']))
-{
-	if ($_POST["type"] == "login") 
-	{
-		ClassicLogin();
-	} 
-	else if ($_POST["type"] == "reset") 
-	{
-		FirstLogin();
-	} 
-	else 
-	{ 
-		echo '<script>alert("Dotaz na server byl zablokován! ' . $_POST['type'] . '");</script>';
-	}
-}
 
-function ClassicLogin()
+if(isset($_POST['username']) && isset($_POST['password']))
 {
 	$users = new Users();
 

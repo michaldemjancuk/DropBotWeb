@@ -49,20 +49,35 @@ class Authenticator
 		}
 	}
 
-	public function IsAdmin($Id = null)
+	public function IsRegisteredUser($username = null)
 	{
-		if(!isset($Id))
+		return $this->ComaprePermissionGroupByUsernameOrCookie(10, $username);
+	}
+
+	public function IsAdmin($username = null)
+	{
+		return $this->ComaprePermissionGroupByUsernameOrCookie(90, $username);
+	}
+
+	public function IsSuperAdmin($username = null)
+	{
+		return $this->ComaprePermissionGroupByUsernameOrCookie(90, $username);
+	}
+
+	public function ComaprePermissionGroupByUsernameOrCookie($value, $username)
+	{
+		if(!isset($username))
 		{
 			if(!$this->CookiesAreSet())
 				return false;
 			$authenticatorSettings = AuthenticatorSettings();
 			$users = new Users();
 			$userId = $_COOKIE[$authenticatorSettings['idCookieName']];
-			return $users->CheckAccountHasAdminRights($userId);
+			return $users->GetRightsPermissionGroup($userId) >= $value;
 		}
 		else
 		{
-			return $users->CheckAccountHasAdminRights($Id);
+			return $users->GetRightsPermissionGroup($username) >= $value;
 		}
 	}
 
