@@ -10,7 +10,7 @@ $password = $_POST["password"];
 $birthdate = $_POST["birth"];
 $PageUrl = $_POST['pageUrl'];
 $verificationCode = 1234;
-$permissionLevel = 90; //
+$permissionLevel = 10; //
 
 
 // 0 - Guest
