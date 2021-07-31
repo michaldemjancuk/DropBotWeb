@@ -26,7 +26,7 @@ function AuthenticatorSettings()
 		// * Name for cookie with user hash stored in *
 	    "hashCookieName" => "hash",	
 		// * Name for cookie with user ID stored in *
-	    "idCookieName" => "userId",
+	    "idCookieName" => "username",
 	    // DEFAULT: 3600 * 24 * 7 (7 DAY LOGGED IN)
 	    // * Length of session in seconds *
 	    "sessionLength" => 3600 * 24 * 7 		

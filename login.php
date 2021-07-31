@@ -15,9 +15,8 @@ if($auth->IsLoggedIn())
 
 if(!empty($_GET['result']))
 {
-		echo '<script>alert("Message: ' . $_GET['result'] . '");</script>';
+	echo '<script>alert("Message: ' . $_GET['result'] . '");</script>';
 }
-
 
 if(isset($_POST['username']) && isset($_POST['password']))
 {
@@ -37,37 +36,7 @@ if(isset($_POST['username']) && isset($_POST['password']))
 	}
 	else
 	{
-		echo '<script>alert("Account with username (' . $_POST['id'] . ') does not exist !");</script>';
-	}
-}
-
-function FirstLogin()
-{
-	$users = new Users();
-	if($users->CheckAccountExists($_POST['id']))
-	{
-		if (!$users->CheckPasswordExists($_POST['id'])) {
-			if($users->ValidateAndSetAccountPass(
-				$_POST['id'], 
-				$_POST['fName'],
-				$_POST['lName'],
-				$_POST['password']))
-			{
-				echo '<script>alert("Uživateli s ID (' . $_POST['id'] . ') bylo nastaveno heslo !");</script>';
-			}
-			else
-			{
-				echo '<script>alert("Uživateli s ID (' . $_POST['id'] . ') NEBYLO nastaveno heslo, zkuste překontrolovat Vámi zadané údaje, pokud jste si jisti, že NEJDE o Vaši chybu, kontaktujte prosím administrátora !!!");</script>';
-			}
-		}
-		else
-		{
-			echo '<script>alert("Účet s tímto ID (' . $_POST['id'] . ') již má nastaveno heslo !");</script>';
-		}
-	}
-	else
-	{
-		echo '<script>alert("Účet s tímto ID (' . $_POST['id'] . ') neexistuje !");</script>';
+		echo '<script>alert("Account with username (' . $_POST['username'] . ') does not exist !");</script>';
 	}
 }
 
@@ -76,7 +45,7 @@ function FirstLogin()
 <!DOCTYPE html>
 <html lang="cs" style="height: 100%">
 <head>
-	<title>ShotBot</title>
+	<title>DropBot</title>
     <meta charset="utf-8" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

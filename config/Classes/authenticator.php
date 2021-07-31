@@ -97,14 +97,14 @@ class Authenticator
 			isset($_COOKIE[$authenticatorSettings['idCookieName']]);
 	}
 
-	public function LogIn($userId, $hash)
+	public function LogIn($username, $hash)
 	{
 		$authenticatorSettings = AuthenticatorSettings();
 		$users = new Users();
-		if($users->VerifiedLogin($userId, $hash))
+		if($users->VerifiedLogin($username, $hash))
 		{
-			$cookie_value = $users->GetPasswordHash($userId);
-			setcookie($authenticatorSettings['idCookieName'], $userId, time() + $authenticatorSettings['sessionLength'], "/");
+			$cookie_value = $users->GetPasswordHash($username);
+			setcookie($authenticatorSettings['idCookieName'], $username, time() + $authenticatorSettings['sessionLength'], "/");
 			setcookie($authenticatorSettings['hashCookieName'], $cookie_value, time() + $authenticatorSettings['sessionLength'], "/");
 			header('Location: /login.php');
 			exit();
