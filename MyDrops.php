@@ -1,59 +1,96 @@
-/* SIZE */
+<?php
 
-.spacer-25{
-	height: 25px;
-}
+include("config/dbConn.php");
+include("config/settings.php");
+include("config/Classes/users.php");
+include("config/Classes/posts.php");
+include("config/Classes/authenticator.php");
 
-.spacer-75{
-	height: 75px;
-}
+$auth = new Authenticator();
+$users = new Users();
+$posts = new Posts();
+//$idToLoad = (isset($_GET['id'])) ? 
+//   $_GET['id'] : 
+//   0;
 
-.full-width{
-	width: 100%;
-}
+$auth->Required_User();
+//$dropsData = $drops->GetById($idToLoad);
+//$posts->AddView($idToLoad, $postData['Views'] + 1);
+//$myProfileImageUrl = $users->GetProfileImageUrlByUsername($auth->GetUserId());
+?>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
+            <div class="profile-content">
+               <!-- begin tab-content -->
+               <div class="tab-content p-0">
+                  <!-- begin #profile-post tab -->
+                  <div class="tab-pane fade active show" id="profile-post">
+                     <!-- begin timeline -->
+                     <ul class="timeline">
+                        <li>
+                           <!-- end timeline-icon -->
+                           <!-- begin timeline-body -->
+                           <div class="timeline-body">
+                              <form method="post" action="actions/addDropImageUpload.php" enctype="multipart/form-data">
+                                 <div class="timeline-header">
+                                    <i><b>
+                                       Upload new drop image
+                                    </b></i>
+                                 </div>
+                                 <div class="timeline-content">
+                                    <!--select class="form-select" aria-label="User upload selection">
+                                      <option selected>Select profile whom has the photo to be assigned</option>
+                                      <option value="<?php echo $auth->GetUserId(); ?>">@<?php echo $auth->GetUserId(); ?> - Me</option>
+                                    </select-->
 
-/* COLORS */
+                                   <div class="col-md-12">
+                                     <div class="input-group">
+                                       <span class="input-group-text" id="inputGroupPrepend3">@</span>
+                                       <input type="text" value="<?php echo $auth->GetUserId(); ?>" class="form-control" name="profileId" aria-describedby="inputGroupPrepend3" required>
+                                     </div>
+                                   </div>
+                                   <div class="timeline-content">
+                                      <p>
+                                         <div class="input-group">
+                                          <input type="file" class="form-control" id="uploadDropImage" aria-describedby="uploadDropImageTxt" aria-label="Upload any png image file" name="uploadDropImage" accept=".png">
+                                          <button class="btn btn-outline-secondary" type="submit" id="uploadDropImageTxt">Add image</button>
+                                        </div>
+                                      </p>
+                                   </div>
+                                   <div class="timeline-likes">
+                                      <div class="stats-right">
+                                      </div>
+                                   </div>
+                                </form>
+                           </div>
+                           <!-- end timeline-body -->
+                        </li>
 
-body{
-	background-color: #72b5ff;
-}
-
-.bg-lgrey{
-	background-color: #e9ecef;
-}
-
-.bg-grey{
-	background-color: lightgrey;
-}
-
-.bg-white{
-	background-color: white;
-}
-
-
-
-/* LOCATION */
-
-.sticky-top{
-	position: webkit-sticky; /* SAFARI */
-	position: sticky;
-	top: 0;
-	z-index: 10;
-}
-
-.sticky-left{
-	position: webkit-sticky; /* SAFARI */
-	position: sticky;
-	left: 0;
-	z-index: 10;
-}
-
-
-/* ===================== Profile =============== */
-body{
+                           <!--?php 
+                            for ($i = 0; $i < sizeof($postsData); ++$i) {
+                              $posts->BuildPost(
+                                 $postsData[$i]['Created'],
+                                 $userData['ProfileImageUrl'],
+                                 $postsData[$i]['Username'],
+                                 $postsData[$i]['PostName'],
+                                 $postsData[$i]['PostText'],
+                                 $postsData[$i]['Views'] + 1
+                              );
+                              $posts->AddView($postsData[$i]['Id'], $postsData[$i]['Views'] + 1);
+                           }
+                           ?-->
+                     </ul>
+                     <!-- end timeline -->
+                  </div>
+                  <!-- end #profile-post tab -->
+               </div>
+               <!-- end tab-content -->
+            </div>
+<style type="text/css">
+   body{
     margin-top:20px;
-    background:#eee;
+    background-color: #f8f9fa!important;
 }
 
 .profile-header {
@@ -694,3 +731,4 @@ select.form-control:not([size]):not([multiple]) {
 .text-danger, .text-red {
     color: #ff5b57!important;
 }
+</style>

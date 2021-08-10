@@ -48,30 +48,32 @@ if($auth->IsAdmin()) {
   echo "<li class='nav-item btn-light'>
     <a class='nav-link' onclick='document.getElementById(&quot;iframeContent&quot;).src =&quot;xxxxxxxxxxxxx.php&quot;;'>
     <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-award'><circle cx='12' cy='8' r='7'></circle><polyline points='8.21 13.89 7 23 12 20 17 23 15.79 13.88'></polyline></svg>
-    Spravovat dropy
+    Manage drops
     </a>
     </li>"; 
     echo "<li class='nav-item btn-light'>
     <a class='nav-link' onclick='document.getElementById(&quot;iframeContent&quot;).src =&quot;xxxxxxxxxxxxx.php&quot;;'>
     <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-file'><path d='M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z'></path><polyline points='13 2 13 9 20 9'></polyline></svg>
-    Vytvořit drop
+    Create drop
     </a>
     </li>";  
-} else {
+}
+
+if($auth->IsModel()) {
   echo "
     <li class='nav-item btn-light'>
-    <a class='nav-link' onclick='document.getElementById(&quot;iframeContent&quot;).src =&quot;xxxxxxxxxxxxx.php&quot;;'>
-    <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-file'><path d='M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z'></path><polyline points='13 2 13 9 20 9'></polyline></svg>
-    Upload image
-    </a>
-    </li>
-    <li class='nav-item btn-light'>
-    <a class='nav-link' onclick='document.getElementById(&quot;iframeContent&quot;).src =&quot;xxxxxxxxxxxxx.php&quot;;'>
+    <a class='nav-link' onclick='document.getElementById(&quot;iframeContent&quot;).src =&quot;MyDrops.php&quot;;'>
     <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-file'><path d='M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z'></path><polyline points='13 2 13 9 20 9'></polyline></svg>
     My drops
     </a>
     </li>";
 } ?>
+                <li class="nav-item btn-light">
+                  <a class="nav-link" onclick="document.getElementById('iframeContent').src ='profile.php';">
+                      <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-user'><path d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/><circle cx='12' cy='7' r='4'/></svg>
+                    My profile
+                  </a>
+                </li>
               </span>
               <!-- <a class="d-flex align-items-center text-muted" href="#">
                 <span data-feather="plus-circle"></span>
@@ -79,22 +81,28 @@ if($auth->IsAdmin()) {
             </h6>
             <hr />
             <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-              <span>Nastaven&iacute;
+              <span>Settings
 <?php 
 if($auth->IsAdmin()) { 
   echo '[<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-award"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>]';
   echo "<li class='nav-item btn-light'>
     <a class='nav-link' onclick='document.getElementById(&quot;iframeContent&quot;).src =&quot;users.php&quot;;'>
     <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-user'><path d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/><circle cx='12' cy='7' r='4'/></svg>
-    U&#382;ivatel&eacute;
+    Users
     </a>
     </li>";
 }
 ?>
                 <li class="nav-item btn-light">
-                  <a class="nav-link" onclick="document.getElementById('iframeContent').src ='userSettings.php';">
+                  <a class="nav-link" onclick="document.getElementById('iframeContent').src ='myProfileSettings.php';">
+                      <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-user'><path d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/><circle cx='12' cy='7' r='4'/></svg>
+                    My profile settings
+                  </a>
+                </li>
+                <li class="nav-item btn-light">
+                  <a class="nav-link" onclick="document.getElementById('iframeContent').src ='xxxxxxxxxxxxx.php';">
                       <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-settings'><circle cx='12' cy='12' r='3'/><path d='M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z'/></svg>
-                    M&aacute; nastaven&iacute;
+                    Settings
                   </a>
                 </li>
               </span>

@@ -1,59 +1,105 @@
-/* SIZE */
+<?php
 
-.spacer-25{
-	height: 25px;
-}
+include("config/dbConn.php");
+include("config/settings.php");
+include("config/Classes/users.php");
+include("config/Classes/posts.php");
+include("config/Classes/authenticator.php");
 
-.spacer-75{
-	height: 75px;
-}
+$auth = new Authenticator();
+$users = new Users();
+$posts = new Posts();
+$idToLoad = (isset($_GET['id'])) ? 
+   $_GET['id'] : 
+   0;
 
-.full-width{
-	width: 100%;
-}
+$auth->Required_User();
+$postData = $posts->GetById($idToLoad);
+$posts->AddView($idToLoad, $postData['Views'] + 1);
+$myProfileImageUrl = $users->GetProfileImageUrlByUsername($auth->GetUserId());
+?>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
-
-/* COLORS */
-
-body{
-	background-color: #72b5ff;
-}
-
-.bg-lgrey{
-	background-color: #e9ecef;
-}
-
-.bg-grey{
-	background-color: lightgrey;
-}
-
-.bg-white{
-	background-color: white;
-}
-
-
-
-/* LOCATION */
-
-.sticky-top{
-	position: webkit-sticky; /* SAFARI */
-	position: sticky;
-	top: 0;
-	z-index: 10;
-}
-
-.sticky-left{
-	position: webkit-sticky; /* SAFARI */
-	position: sticky;
-	left: 0;
-	z-index: 10;
-}
-
-
-/* ===================== Profile =============== */
-body{
+            <div class="profile-content">
+               <!-- begin tab-content -->
+               <div class="tab-content p-0">
+                  <!-- begin #profile-post tab -->
+                  <div class="tab-pane fade active show" id="profile-post">
+                     <!-- begin timeline -->
+                     <ul class="timeline">
+                        <li>
+                           <div class="timeline-time">
+                              <span class="date"><?php echo $postData['Created'] ?></span>
+                           </div>
+                           <!-- end timeline-time -->
+                           <!-- begin timeline-icon -->
+                           <div class="timeline-icon">
+                              <a href="javascript:;">&nbsp;</a>
+                           </div>
+                           <!-- end timeline-icon -->
+                           <!-- begin timeline-body -->
+                           <div class="timeline-body">
+                              <div class="timeline-header">
+                                 <span class="userimage"><img src="<?php echo $myProfileImageUrl ?>" alt=""></span>
+                                 <span class="username"><i>@<a href="profile.php?id=<?php echo $postData['Username'] ?>"><?php echo $postData['Username'] ?></a></i> <small></small></span>
+                                 <span class="pull-right text-muted"><?php echo $postData['Views'] + 1?> Views</span>
+                              </div>
+                              <div class="timeline-content">
+                                 <p>
+                                    <h4><b><?php echo $postData['PostName'] ?></b></h4>
+                                 </p>
+                              </div>
+                              <div class="timeline-content">
+                                 <p>
+                                    <?php echo $postData['PostText'] ?>
+                                 </p>
+                              </div>
+                              <div class="timeline-likes">
+                                 <div class="stats-right">
+                                    <span class="stats-text">xxx Shares</span>
+                                    <span class="stats-text">xxx Comments</span>
+                                 </div>
+                                 <div class="stats">
+                                    <span class="fa-stack fa-fw stats-icon">
+                                    <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                                    <i class="fa fa-thumbs-up fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                    <span class="stats-total">xxx</span>
+                                 </div>
+                              </div>
+                              <div class="timeline-footer">
+                                 <a href="javascript:;" class="m-r-15 text-inverse-lighter"><i class="fa fa-thumbs-up fa-fw fa-lg m-r-3"></i> Like</a>
+                                 <a href="javascript:;" class="m-r-15 text-inverse-lighter"><i class="fa fa-comments fa-fw fa-lg m-r-3"></i> Comment</a> 
+                                 <a href="javascript:;" class="m-r-15 text-inverse-lighter"><i class="fa fa-share fa-fw fa-lg m-r-3"></i> Share</a>
+                              </div>
+                              <div class="timeline-comment-box">
+                                 <div class="user"><img src="<?php echo $myProfileImageUrl ?>"></div>
+                                 <div class="input">
+                                    <form action="">
+                                       <div class="input-group">
+                                          <input type="text" class="form-control rounded-corner" placeholder="Write a comment...">
+                                          <span class="input-group-btn p-l-10">
+                                          <button class="btn btn-primary f-s-12 rounded-corner" type="button">Comment</button>
+                                          </span>
+                                       </div>
+                                    </form>
+                                 </div>
+                              </div>
+                           </div>
+                           <!-- end timeline-body -->
+                        </li>
+                     </ul>
+                     <!-- end timeline -->
+                  </div>
+                  <!-- end #profile-post tab -->
+               </div>
+               <!-- end tab-content -->
+            </div>
+<style type="text/css">
+   body{
     margin-top:20px;
-    background:#eee;
+    background-color: #f8f9fa!important;
 }
 
 .profile-header {
@@ -694,3 +740,4 @@ select.form-control:not([size]):not([multiple]) {
 .text-danger, .text-red {
     color: #ff5b57!important;
 }
+</style>

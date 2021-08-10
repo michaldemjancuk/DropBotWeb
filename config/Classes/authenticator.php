@@ -54,14 +54,24 @@ class Authenticator
 		return $this->ComaprePermissionGroupByUsernameOrCookie(10, $username);
 	}
 
+	public function IsModel($username = null)
+	{
+		return 
+			$this->ComaprePermissionGroupByUsernameOrCookie(20, $username) || 
+			$this->ComaprePermissionGroupByUsernameOrCookie(21, $username) || 
+			$this->ComaprePermissionGroupByUsernameOrCookie(99, $username);
+	}
+
 	public function IsAdmin($username = null)
 	{
-		return $this->ComaprePermissionGroupByUsernameOrCookie(90, $username);
+		return 
+			$this->ComaprePermissionGroupByUsernameOrCookie(90, $username) || 
+			$this->ComaprePermissionGroupByUsernameOrCookie(99, $username);
 	}
 
 	public function IsSuperAdmin($username = null)
 	{
-		return $this->ComaprePermissionGroupByUsernameOrCookie(90, $username);
+		return $this->ComaprePermissionGroupByUsernameOrCookie(99, $username);
 	}
 
 	public function ComaprePermissionGroupByUsernameOrCookie($value, $username)
@@ -73,11 +83,11 @@ class Authenticator
 			$authenticatorSettings = AuthenticatorSettings();
 			$users = new Users();
 			$userId = $_COOKIE[$authenticatorSettings['idCookieName']];
-			return $users->GetRightsPermissionGroup($userId) >= $value;
+			return $users->GetRightsPermissionGroup($userId) == $value;
 		}
 		else
 		{
-			return $users->GetRightsPermissionGroup($username) >= $value;
+			return $users->GetRightsPermissionGroup($username) == $value;
 		}
 	}
 

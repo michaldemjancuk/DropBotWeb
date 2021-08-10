@@ -76,12 +76,20 @@ class Users
 		}
 	}
 
-	public function GetUserData($Id)
+	public function GetUserData($username)
 	{
 		$dbConn = new DbConn(); 
 		$pdo = $dbConn->GetConnection();
-		$data = $pdo->query("SELECT * FROM users WHERE Id = " . $Id)->fetchAll();
+		$data = $pdo->query("SELECT * FROM users WHERE Username = '" . $username . "'")->fetchAll();
 		return $data[0];
+	}
+
+	public function GetDropUsersUploadList($isAdmin = false)
+	{
+		$dbConn = new DbConn(); 
+		$pdo = $dbConn->GetConnection();
+		$data = $pdo->query("SELECT Id, Username FROM users ORDER BY Username ASC")->fetchAll();
+		return $data;
 	}
 
 	public function Delete($Id)
@@ -117,6 +125,14 @@ class Users
 		$dbConn = new DbConn(); 
 		$pdo = $dbConn->GetConnection();
 		$data = $pdo->query("SELECT PermissionLevel FROM users WHERE username = '" . $username . "'")->fetchAll();
+		return $data[0][0];
+	}
+
+	public function GetProfileImageUrlByUsername($username)
+	{
+		$dbConn = new DbConn(); 
+		$pdo = $dbConn->GetConnection();
+		$data = $pdo->query("SELECT ProfileImageUrl FROM users WHERE username = '" . $username . "'")->fetchAll();
 		return $data[0][0];
 	}
 
