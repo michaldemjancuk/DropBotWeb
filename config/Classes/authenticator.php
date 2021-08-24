@@ -2,7 +2,15 @@
 
 /**
 	>>> DEPENDENCIES <<<
+//20 - Free drop
+//23 - Paid drop less than 3 Three times (Velký třikrát)
+//24 - Paid drop less than 3 ONCE (Velký jednou)
+//25 - Paid drop less than 3 (Velký) 
+//26 - Paid drop more than 3 (Malý)
+//29 - drop admin with 25 and 24
 
+
+	
 	include("config/dbConn.php");
 	include("config/settings.php");
 	include("config/Classes/users.php");

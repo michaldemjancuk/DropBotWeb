@@ -4,22 +4,31 @@ include("config/dbConn.php");
 include("config/settings.php");
 include("config/Classes/users.php");
 include("config/Classes/posts.php");
+include("config/Classes/dropImageUploads.php");
 include("config/Classes/authenticator.php");
 
 $auth = new Authenticator();
 $users = new Users();
 $posts = new Posts();
+$drops = new DropImageUploads();
 //$idToLoad = (isset($_GET['id'])) ? 
 //   $_GET['id'] : 
 //   0;
 
+$maxDrops = count($drops->GetAllUniqueUploads()) / 8;
+
 $auth->Required_User();
-//$dropsData = $drops->GetById($idToLoad);
+$username = $auth->GetUserId();
+$dropsData = $drops->GetByUsername($username);
+
+$usersList = $users->GetDropUsersUploadList();
+
 //$posts->AddView($idToLoad, $postData['Views'] + 1);
-//$myProfileImageUrl = $users->GetProfileImageUrlByUsername($auth->GetUserId());
+$myProfileImageUrl = $users->GetProfileImageUrlByUsername($auth->GetUserId());
 ?>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<link rel="stylesheet" type="text/css" href="/css/ProfileAndPosts.css">
 
             <div class="profile-content">
                <!-- begin tab-content -->
@@ -39,22 +48,20 @@ $auth->Required_User();
                                     </b></i>
                                  </div>
                                  <div class="timeline-content">
-                                    <!--select class="form-select" aria-label="User upload selection">
-                                      <option selected>Select profile whom has the photo to be assigned</option>
-                                      <option value="<?php echo $auth->GetUserId(); ?>">@<?php echo $auth->GetUserId(); ?> - Me</option>
-                                    </select-->
+                                    <div class="row">
+                                        <div class="col">
+                                            <input class="form-control" name="profileId" list="usersList" id="userDataList" placeholder="Select profile whom has the photo to be assigned" required>
+                                            <datalist id="usersList">
+                                                <?php if($auth->IsAdmin()) { $users->GenerateUsersSelect(); } ?>
+                                            </datalist>
+                                        </div>
+                                    </div>
 
-                                   <div class="col-md-12">
-                                     <div class="input-group">
-                                       <span class="input-group-text" id="inputGroupPrepend3">@</span>
-                                       <input type="text" value="<?php echo $auth->GetUserId(); ?>" class="form-control" name="profileId" aria-describedby="inputGroupPrepend3" required>
-                                     </div>
-                                   </div>
                                    <div class="timeline-content">
                                       <p>
                                          <div class="input-group">
-                                          <input type="file" class="form-control" id="uploadDropImage" aria-describedby="uploadDropImageTxt" aria-label="Upload any png image file" name="uploadDropImage" accept=".png">
-                                          <button class="btn btn-outline-secondary" type="submit" id="uploadDropImageTxt">Add image</button>
+                                          <input type="file" class="form-control" id="uploadDropImage" aria-describedby="uploadDropImageTxt" aria-label="Upload any png image file" name="uploadDropImage">
+                                          <button class="btn btn-outline-secondary" type="submit" id="uploadDropImageTxt" accept="image/gif, image/jpeg, image/jpg, image/png">Add image</button>
                                         </div>
                                       </p>
                                    </div>
@@ -67,19 +74,18 @@ $auth->Required_User();
                            <!-- end timeline-body -->
                         </li>
 
-                           <!--?php 
-                            for ($i = 0; $i < sizeof($postsData); ++$i) {
-                              $posts->BuildPost(
-                                 $postsData[$i]['Created'],
-                                 $userData['ProfileImageUrl'],
-                                 $postsData[$i]['Username'],
-                                 $postsData[$i]['PostName'],
-                                 $postsData[$i]['PostText'],
-                                 $postsData[$i]['Views'] + 1
+                           <?php 
+                            for ($i = 0; $i < sizeof($dropsData); ++$i) {
+                              $drops->BuildPost(
+                                 $dropsData[$i]['Id'],
+                                 $dropsData[$i]['Created'],
+                                 $myProfileImageUrl,
+                                 $username,
+                                 $dropsData[$i]['LocalUrl'],
+                                 $dropsData[$i]['LocalUrl']
                               );
-                              $posts->AddView($postsData[$i]['Id'], $postsData[$i]['Views'] + 1);
                            }
-                           ?-->
+                           ?>
                      </ul>
                      <!-- end timeline -->
                   </div>

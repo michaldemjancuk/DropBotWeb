@@ -80,7 +80,7 @@ if(isset($_POST['username']) && isset($_POST['password']))
 			<li class="nav-item" role="presentation">
 				<button class="nav-link active bg-white" id="login-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Login</button>
 			</li>
-			<li class="nav-item" role="presentation">
+			<li class="nav-item" role="presentation" hidden>
 				<button class="nav-link bg-white" id="registration-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Registration</button>
 			</li>
 		</ul>

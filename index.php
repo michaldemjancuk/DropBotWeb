@@ -9,6 +9,14 @@ $auth = new Authenticator();
 $users = new Users();
 $auth->Required_User();
 
+$if = "/help/index.html";
+
+if ($auth->IsAdmin()) {
+  if(isset($_GET["if"])){
+    $if = $_GET["if"];
+  }
+}
+
 ?>
 <!doctype html>
 <html lang="cs">
@@ -45,26 +53,32 @@ $auth->Required_User();
 <?php 
 if($auth->IsAdmin()) { 
   echo '[<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-award"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg> <i>Admin</i> ]';
-  echo "<li class='nav-item btn-light'>
+  echo "<!--li class='nav-item btn-light'>
     <a class='nav-link' onclick='document.getElementById(&quot;iframeContent&quot;).src =&quot;xxxxxxxxxxxxx.php&quot;;'>
     <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-award'><circle cx='12' cy='8' r='7'></circle><polyline points='8.21 13.89 7 23 12 20 17 23 15.79 13.88'></polyline></svg>
     Manage drops
     </a>
-    </li>"; 
+    </li-->"; 
     echo "<li class='nav-item btn-light'>
-    <a class='nav-link' onclick='document.getElementById(&quot;iframeContent&quot;).src =&quot;xxxxxxxxxxxxx.php&quot;;'>
+    <a class='nav-link' onclick='document.getElementById(&quot;iframeContent&quot;).src =&quot;createDrop.php&quot;;'>
     <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-file'><path d='M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z'></path><polyline points='13 2 13 9 20 9'></polyline></svg>
     Create drop
     </a>
     </li>";  
+    echo "<li class='nav-item btn-light'>
+    <a class='nav-link' onclick='document.getElementById(&quot;iframeContent&quot;).src =&quot;generatedDrops.php&quot;;'>
+    <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-file'><path d='M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z'></path><polyline points='13 2 13 9 20 9'></polyline></svg>
+    Generated drops
+    </a>
+    </li>";  
 }
 
-if($auth->IsModel()) {
+if($auth->IsModel() || $auth->IsAdmin()) {
   echo "
     <li class='nav-item btn-light'>
-    <a class='nav-link' onclick='document.getElementById(&quot;iframeContent&quot;).src =&quot;MyDrops.php&quot;;'>
+    <a class='nav-link' onclick='document.getElementById(&quot;iframeContent&quot;).src =&quot;myDrops.php&quot;;'>
     <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-file'><path d='M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z'></path><polyline points='13 2 13 9 20 9'></polyline></svg>
-    My drops
+    Upload images for drops
     </a>
     </li>";
 } ?>
@@ -88,7 +102,7 @@ if($auth->IsAdmin()) {
   echo "<li class='nav-item btn-light'>
     <a class='nav-link' onclick='document.getElementById(&quot;iframeContent&quot;).src =&quot;users.php&quot;;'>
     <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-user'><path d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/><circle cx='12' cy='7' r='4'/></svg>
-    Users
+    Accounts
     </a>
     </li>";
 }
@@ -136,7 +150,7 @@ if($auth->IsAdmin()) {
 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
           <div class="ratio ratio-16x9">
-            <iframe id="iframeContent" class="embed-responsive-item col-md-12" src="/help/index.html" allowfullscreen></iframe>
+            <iframe id="iframeContent" class="embed-responsive-item col-md-12" src="<?php echo $if; ?>" allowfullscreen></iframe>
           </div>
         </main>
       </div>

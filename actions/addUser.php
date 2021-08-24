@@ -7,18 +7,17 @@ include(dirname(__FILE__) . "/../config/Classes/authenticator.php");
 $auth = new Authenticator();
 $auth->Required_Admin("?target=index.php");
 
-$id = $_POST["id"];
-$firstName = $_POST["firstName"];
-$lastName = $_POST["lastName"];
-$IsAdmin = false;
-$departmentId = $_POST['DepartmentId'];
-//$shift = strtoupper($_POST["shift"]);
-//$hash = password_hash($id, PASSWORD_DEFAULT);
+$Username = $_POST["Username"];
+$Email = $_POST["Email"];
+$BirthDate = $_POST["BirthDate"];
+$PageUrl = $_POST["OnlyFans"];
+$PermissionLevel = $_POST['PermissionLevel'];
+$VerificationCode = str_pad(rand(0, pow(10, 4)-1), 4, '0', STR_PAD_LEFT);
 
 $usersClass = new Users();
 
 $usersClass
-	->AddWithDep($id, $firstName, $lastName, $IsAdmin, $departmentId);
+	->Add($Username, $Email, $BirthDate, $PageUrl, $VerificationCode, $PermissionLevel);
 
 header('Location: /users.php'); 
 exit();

@@ -13,17 +13,13 @@ class Users
 		# code...
 	}
 
-	public function Add($Id, $FirstName, $LastName, $IsAdmin, $Shift, $Hash = '')
+	public function Add($username, $email, $birthdate, $PageUrl, $verificationCode, $permissionLevel, $profileImageUrl = '')
 	{
-		if($IsAdmin == 0 || $IsAdmin == "0"){
-			$IsAdmin = '';
-		}
-		$Hash = password_hash($Id, PASSWORD_DEFAULT);
 		$dbConn = new DbConn();
-		$sql = "INSERT INTO `users`(Id, FirstName, LastName, IsAdmin, Shift, Hash) VALUES (?, ?, ?, ?, ?, ?)";
+		$sql = "INSERT INTO `users`(Username, Email, BirthDate, PageUrl, VerificationCode, PermissionLevel, ProfileImageUrl) VALUES (?, ?, ?, ?, ?, ?, ?)";
 		$pdo = $dbConn->GetConnection();
 		$stmt= $pdo->prepare($sql);
-		$stmt->execute([$Id, $FirstName, $LastName, $IsAdmin, $Shift, $Hash]);
+		$stmt->execute([$username, $email, $birthdate, $PageUrl, $verificationCode, $permissionLevel, $profileImageUrl]);
 	}
 
 	public function Register($username, $email, $hash, $birthdate, $PageUrl, $verificationCode, $permissionLevel)
@@ -84,12 +80,28 @@ class Users
 		return $data[0];
 	}
 
-	public function GetDropUsersUploadList($isAdmin = false)
+	public function GetAll()
 	{
 		$dbConn = new DbConn(); 
 		$pdo = $dbConn->GetConnection();
-		$data = $pdo->query("SELECT Id, Username FROM users ORDER BY Username ASC")->fetchAll();
+		$data = $pdo->query("SELECT * FROM users order by Username")->fetchAll();
 		return $data;
+	}
+
+	public function GetDropUsersUploadList()
+	{
+		$dbConn = new DbConn(); 
+		$pdo = $dbConn->GetConnection();
+		$data = $pdo->query("SELECT Username, Id FROM users ORDER BY Username ASC")->fetchAll();
+		return $data;
+	}
+
+	public function GenerateUsersSelect()
+	{
+		$data = $this->GetDropUsersUploadList();
+		for($i = 0; $i < sizeof($data); $i++){
+			echo "<option value='" . $data[$i]['Username'] . "'>@" . $data[$i]['Username'] . " - [Id:" . $data[$i]['Id'] . "]</option>";
+		}
 	}
 
 	public function Delete($Id)
@@ -99,6 +111,24 @@ class Users
 		$sql = "DELETE FROM users Where Id = ?";
 		$stmt= $pdo->prepare($sql);
 		$stmt->execute([$Id]);
+	}
+
+	public function Enable($Username)
+	{
+		$dbConn = new DbConn();
+		$pdo = $dbConn->GetConnection();
+		$sql = "UPDATE users SET Active = 1 Where Username = ?";
+		$stmt= $pdo->prepare($sql);
+		$stmt->execute([$Username]);
+	}
+
+	public function Disable($Username)
+	{
+		$dbConn = new DbConn();
+		$pdo = $dbConn->GetConnection();
+		$sql = "UPDATE users SET Active = 0 Where Username = ?";
+		$stmt= $pdo->prepare($sql);
+		$stmt->execute([$Username]);
 	}
 
 	public function VerifiedLogin($username, $Hash)

@@ -17,6 +17,8 @@ function IndexSettings()
 function AllSettings()
 {
 	return array(
+		// >> DO NOT MODIFY <<
+	    "HomepageURL" => "https://disctrictx.cz/"
 	);
 }
 

@@ -6,7 +6,7 @@ include(dirname(__FILE__) . "/../config/Classes/users.php");
 include(dirname(__FILE__) . "/../config/Classes/authenticator.php");
 include(dirname(__FILE__) . "/../config/Classes/dropImageUploads.php");
 $auth = new Authenticator();
-$auth->Required_Admin("?target=index.php");
+$auth->Required_User("?target=index.php");
 
 $filename = basename($_FILES["uploadDropImage"]["name"]);
 $tempname = $_FILES["uploadDropImage"]["tmp_name"];    
@@ -14,10 +14,11 @@ $UserId = $_POST["profileId"];
 $newName = bin2hex(openssl_random_pseudo_bytes(16)) . ".png";
 $msg = "";
 
-
-$target_dir = dirname(__FILE__) . "\\..\\dropImageUploads\\";;
+$dirnameThis = dirname(__FILE__);
+$root = substr($dirnameThis, 0, strrpos( $dirnameThis, '/'));
+$target_dir = $root . "/dropImageUploads/";
 $target_file = $target_dir . $newName;
-$folder = dirname(__FILE__) . "\\dropImageUploads\\";
+$nameWithFolder =  "dropImageUploads/" . $newName;
 $uploadOk = 1;
 $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
 
@@ -55,29 +56,19 @@ if ($uploadOk == 0) {
 // if everything is ok, try to upload file
 } else {
   if (move_uploaded_file($_FILES["uploadDropImage"]["tmp_name"], $target_file)) {
-    echo "The file ". htmlspecialchars( basename( $_FILES["uploadDropImage"]["name"])). " has been uploaded.";
+    echo "The file ". htmlspecialchars( basename( $_FILES["uploadDropImage"]["name"])). " has been uploaded and moved from" . $_FILES["uploadDropImage"]["tmp_name"];
   } else {
     echo "Sorry, there was an error uploading your file.<br>";
   }
 }
 
-
-
-
-
-echo 
-"filename: " . $filename . "<br>" .
-"tempname: " . $tempname . "<br>" .
-"UserId: " . $UserId . "<br>" .
-"File exists (tmp): " . file_exists($tempname);
-
 $DIUpload = new DropImageUploads();
 
 $DIUpload
-	->Add($folder, $UserId);
+	->Add($nameWithFolder, $UserId);
 
 echo $msg;
 
-//header('Location: /MyDrops.php'); 
+header('Location: /myDrops.php'); 
 exit();
 ?>
