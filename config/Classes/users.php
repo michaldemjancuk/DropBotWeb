@@ -88,6 +88,43 @@ class Users
 		return $data;
 	}
 
+	public function GetOccurancesForUser($Username)
+	{
+		$dbConn = new DbConn(); 
+		$pdo = $dbConn->GetConnection();
+		$data = $pdo->query("SELECT Occurances FROM users WHERE Username = '" . $Username . "'")->fetchAll();
+		return $data[0][0];
+	}
+
+	public function SetOccuranceForUser($Username, $Occurance)
+	{
+		$dbConn = new DbConn();
+		$pdo = $dbConn->GetConnection();
+		$sql = "UPDATE users SET Occurances = ? Where Username = ?";
+		$stmt= $pdo->prepare($sql);
+		$stmt->execute([$Occurance, $Username]);
+	}
+
+	public function GetAllOccurancesSelect($KeySelected = '')
+	{
+		$data = $this->GetOccurancesList();
+		for($i = 0; $i < sizeof($data); $i++){
+			if($data[$i]['Key'] != $KeySelected)
+				echo "<option value='" . $data[$i]['Key'] . "'>" . $data[$i]['Description'] . " - [Key:" . $data[$i]['Key'] . "]</option>";
+			else
+				echo "<option value='" . $data[$i]['Key'] . "' selected>" . $data[$i]['Description'] . " - [Key:" . $data[$i]['Key'] . "]</option>";
+
+		}
+	}
+
+	function GetOccurancesList()
+	{
+		$dbConn = new DbConn(); 
+		$pdo = $dbConn->GetConnection();
+		$data = $pdo->query("SELECT * FROM `dbot_occurances_list`")->fetchAll();
+		return $data;
+	}
+
 	public function GetDropUsersUploadList()
 	{
 		$dbConn = new DbConn(); 

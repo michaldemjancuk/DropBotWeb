@@ -98,9 +98,6 @@ $ImageUrl = $_GET["ImageUrl"] ?? "";
 	<body>
 		<form method="post">
 			<label for="upload_image">
-				<div class="overlay">
-					<div class="text bg-dark">Click here for upload</div>
-				</div>
 				Click for upload and crop image
 				<input type="file" name="image" class="image" id="upload_image" style="display:none" />
 			</label>
@@ -168,7 +165,7 @@ $(document).ready(function(){
 	$modal.on('shown.bs.modal', function() {
 		cropper = new Cropper(image, {
 			aspectRatio: 1,
-			viewMode: 3,
+			viewMode: 0,
 			preview:'.preview'
 		});
 	}).on('hidden.bs.modal', function(){
@@ -178,8 +175,8 @@ $(document).ready(function(){
 
 	$('#crop').click(function(){
 		canvas = cropper.getCroppedCanvas({
-			width:400,
-			height:400
+			width:960,
+			height:1080
 		});
 
 		canvas.toBlob(function(blob){

@@ -9,8 +9,8 @@ $auth = new Authenticator();
 $auth->Required_Admin("?target=index.php");
 
 $dbot_db = new Dbot_db();
+$users = new Users();
 $dbot_diu = new DropImageUploads();
-
 
 $template = $_POST["template"];
 $permissionRole = $_POST["permissionRole"];
@@ -20,6 +20,7 @@ if(isset($_GET["ReturnParams"]))
 	$template = $explodedParams[0];
 	$permissionRole = $explodedParams[1];
 }
+
 $thisUrlWithParams = "/actions/dbot_generateNewDrops.php?ReturnParams=".$template."-".$permissionRole;
 $uniqueUsers = $dbot_diu->GetAllUniqueUsersWithPhotoInPermGroup($permissionRole);
 $uniqueUsersInactive = $dbot_diu->GetAllUniqueUsersWithPhotoInPermGroup($permissionRole, 0);
@@ -58,16 +59,30 @@ $suggestedDropsCount = round(count($uniqueUsers) / $templateSize);
 				<li class="list-group-item bg-dark text-white">
 					<div class="row text-center">
 						<div class="col-md-4"><b>Username</b></div>
-						<div class="col-md-8 text-center"><b>Actions</b></div>
+						<div class="col-md-4"><b>Drop occurances</b></div>
+						<div class="col-md-4 text-center"><b>Actions</b></div>
 					</div>
 				</li>
 				<?php for ($i = 0; $i < sizeof($uniqueUsers); ++$i) {  ?>
 				<li class="list-group-item bg-light">
 					<div class="row text-center">
-						<div class="col-md-4"><b><?php echo $uniqueUsers[$i]['Username']; ?></b></div>
-						<div class="col-md-8 text-center"><b>
-							<a class="btn btn-sm btn-warning" href="/actions/disableAccount.php?Username=<?php echo $uniqueUsers[$i]['Username']; ?>&BackUrl=<?php echo $thisUrlWithParams; ?>">Disable account</a>
-						</b></div>
+						<div class="col-md-4">
+							<b><?php echo $uniqueUsers[$i]['Username']; ?></b>
+						</div>
+						<div class="col-md-4">
+							<select 
+								class="form-select GetAllOccurancesSelect" 
+								id="<?php echo $uniqueUsers[$i]['Username']; ?>" 
+								aria-label="User occurances count" 
+								required>
+								<?php $users->GetAllOccurancesSelect($users->GetOccurancesForUser($uniqueUsers[$i]['Username'])); ?>
+							</select>
+						</div>
+						<div class="col-md-4 text-center">
+							<b>
+								<a class="btn btn-sm btn-warning" href="/actions/disableAccount.php?Username=<?php echo $uniqueUsers[$i]['Username']; ?>&BackUrl=<?php echo $thisUrlWithParams; ?>">Disable account</a>
+							</b>
+						</div>
 					</div>
 				</li>
 			<?php } ?>
@@ -137,3 +152,32 @@ $suggestedDropsCount = round(count($uniqueUsers) / $templateSize);
 		</div>
 	</div>
 </body>
+
+<script type="text/javascript">
+
+	function updateUserOccurances(username, occuranceKey) {
+		$.post("/actions/updateUserOccurances.php",
+		{
+			Username:username,
+			Occurances:occuranceKey
+		},
+		function(data,status){
+			alert("Update status: " + status);
+		});
+	}
+
+	$(".GetAllOccurancesSelect").change(function(){
+	    var username = $(this).attr('id');
+	    var occurances = $(this).val();
+	    updateUserOccurances(username, occurances);
+	});
+</script>
+
+<?php
+
+function GetSelectForValue()
+{
+	# code...
+}
+
+?>

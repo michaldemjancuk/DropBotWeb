@@ -74,14 +74,14 @@ class ImgGenerator
 		// Create empty image with size prepared
 	 	$image = imagecreatetruecolor($sizeX, $sizeY);
 
-		$image1 = imagecreatefromjpeg($wdthsKeys[7]);
-		$image2 = imagecreatefromjpeg($wdthsKeys[5]);
-		$image3 = imagecreatefromjpeg($wdthsKeys[3]);
-		$image4 = imagecreatefromjpeg($wdthsKeys[1]);
-		$image5 = imagecreatefromjpeg($wdthsKeys[0]);
-		$image6 = imagecreatefromjpeg($wdthsKeys[2]);
-		$image7 = imagecreatefromjpeg($wdthsKeys[4]);
-		$image8 = imagecreatefromjpeg($wdthsKeys[6]);
+		$image1 = imagecreatefrompng($wdthsKeys[7]);
+		$image2 = imagecreatefrompng($wdthsKeys[5]);
+		$image3 = imagecreatefrompng($wdthsKeys[3]);
+		$image4 = imagecreatefrompng($wdthsKeys[1]);
+		$image5 = imagecreatefrompng($wdthsKeys[0]);
+		$image6 = imagecreatefrompng($wdthsKeys[2]);
+		$image7 = imagecreatefrompng($wdthsKeys[4]);
+		$image8 = imagecreatefrompng($wdthsKeys[6]);
 
 		list($width_1, $height_1) = getimagesize($wdthsKeys[7]);
 		list($width_2, $height_2) = getimagesize($wdthsKeys[5]);
