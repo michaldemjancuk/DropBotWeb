@@ -10,6 +10,8 @@ $auth = new Authenticator();
 $auth->Required_Admin("?target=actions/logout.php");
 
 $usersData = $users->GetAll();
+$permissionLevelsList = $users->GetPermissionLevelsFromTable();
+
 ?>
 <!DOCTYPE html>
 <html lang="cs">
@@ -39,11 +41,10 @@ $usersData = $users->GetAll();
 				<div class="row text-center">
 					<div class="col-md-2"><b>Username</b></div>
 					<div class="col-md-2"><b>Email</b></div>
-					<div class="col-md-1"><b>Password</b></div>
 					<div class="col-md-1"><b>Birthdate</b></div>
 					<div class="col-md-1"><b>Verified</b></div>
-					<div class="col-md-1"><b>Access group</b></div>
-					<div class="col-md-4 text-center"><b>Actions</b></div>
+					<div class="col-md-3"><b>Access group</b></div>
+					<div class="col-md-3 text-center"><b>Actions</b></div>
 				</div>
 			</li>
 			<?php for ($i = 0; $i < sizeof($usersData); ++$i) {  ?>
@@ -51,7 +52,6 @@ $usersData = $users->GetAll();
 				<div class="row text-center">
 					<div class="col-md-2"><b><?php echo $usersData[$i]['Username']; ?></b></div>
 					<div class="col-md-2"><b><?php echo $usersData[$i]['Email']; ?></b></div>
-					<div class="col-md-1"><b><button class="btn btn-sm btn-warning disabled">Reset</button></b></div>
 					<div class="col-md-1"><b><?php echo $usersData[$i]['BirthDate']; ?></b></div>
 					<div class="col-md-1"><b>
 						<?php if(isset($usersData[$i]['VerificationCode'])) { ?>
@@ -60,9 +60,23 @@ $usersData = $users->GetAll();
 							<img class="btn-sm btn-success" src="/_icons/check.svg">
 						<?php } ?>
 					</b></div>
-					<div class="col-md-1"><b><?php echo $usersData[$i]['PermissionLevel']; ?></b></div>
-					<div class="col-md-4 text-center"><b>
+					<div class="col-md-3"><b>
+						<select class="form-control access-groups-select" id="<?php echo $usersData[$i]['Username']; ?>" placeholder="Permission level">
+<?php for ($y=0; $y < count($permissionLevelsList); $y++) { 
+	if($permissionLevelsList[$y][0] == $usersData[$i]['PermissionLevel']) { ?>
+			<option value="<?php echo $permissionLevelsList[$y][0]; ?>" selected>
+				<?php echo $permissionLevelsList[$y][1]; ?> (<?php echo $permissionLevelsList[$y][0]; ?>)
+			</option>
+<?php } else { ?>
+			<option value="<?php echo $permissionLevelsList[$y][0]; ?>">
+				<?php echo $permissionLevelsList[$y][1]; ?> (<?php echo $permissionLevelsList[$y][0]; ?>)
+			</option>
+<?php }} ?>
+						</select>	
+					</b></div>
+					<div class="col-md-3 text-center"><b>
 						<a class="btn btn-sm btn-warning disabled" href="/actions/resetPassword.php?Username=<?php echo $usersData[$i]['Id']; ?>">Reset password</a>
+						<a class="btn btn-sm btn-primary" href="/profile.php?id=<?php echo $usersData[$i]["Username"]; ?>">Profile</a>
 						<a class="btn btn-sm btn-danger" onclick="confirmDelete('<?php echo $usersData[$i]["Username"]; ?>', '/actions/deleteUser.php?Id=<?php echo $usersData[$i]["Id"]; ?>')">Delete account</a>
 					</b></div>
 				</div>
@@ -114,12 +128,13 @@ $usersData = $users->GetAll();
 		    <br>
 		    <div class="row">
 		    	<div class="col">
-					<input class="form-control" name="PermissionLevel" list="datalistOptions" id="exampleDataList" placeholder="Permission level">
-					<datalist id="datalistOptions">
-						<option value="10">Basic user (follower)</option>
-						<option value="20">Model</option>
-						<option value="90">Admin</option>
-					</datalist>
+					<select class="form-control" name="PermissionLevel" list="permissionLevelsOptions" id="exampleDataList" placeholder="Permission level">
+<?php for ($i=0; $i < count($permissionLevelsList); $i++) { ?>
+			<option value="<?php echo $permissionLevelsList[$i][0]; ?>">
+				<?php echo $permissionLevelsList[$i][1]; ?> (<?php echo $permissionLevelsList[$i][0]; ?>)
+			</option>
+<?php } ?>
+					</select>
 			    </div>
 		    </div>
 			<br>
@@ -135,5 +150,26 @@ $usersData = $users->GetAll();
     </div>
   </div>
 </div>
+<script type="text/javascript">
+
+	$(".access-groups-select").change(function(){
+	    var username = $(this).attr('id');
+	    var permissionLevel = $(this).val();
+	    changeAccessGroup(username,permissionLevel);
+	});
+
+	function changeAccessGroup(username,permissionLevel) {
+		$.post("/actions/updateUserAccessGroup.php",
+		{
+			Username:username,
+			PermissionLevel:permissionLevel
+		},
+		function(data,status){
+			//alert("Update status: " + status + " (" + username + "," + edgeStatus + ")");
+        	window.location.href= '/users.php';
+		});
+	}
+
+</script>
 </body>
 </html>

@@ -22,13 +22,13 @@ class DropImageUploads
       $stmt->execute([$LocalUrl, $UserId]);
    }
 
-	public function GetById($PostId)
-	{
-		$dbConn = new DbConn(); 
-		$pdo = $dbConn->GetConnection();
-		$data = $pdo->query("SELECT * FROM dbot_diu WHERE Id = '" . $PostId . "'")->fetchAll();
-		return $data[0];
-	}
+   public function GetById($PostId)
+   {
+      $dbConn = new DbConn(); 
+      $pdo = $dbConn->GetConnection();
+      $data = $pdo->query("SELECT * FROM dbot_diu WHERE Id = '" . $PostId . "'")->fetchAll();
+      return $data[0];
+   }
 
    public function GetByUsername($Username, $descend = true)
    {
@@ -82,7 +82,7 @@ class DropImageUploads
    {
       $dbConn = new DbConn(); 
       $pdo = $dbConn->GetConnection();
-      $data = $pdo->query("SELECT DISTINCT(diu.ProfileId) AS Username FROM dbot_diu diu INNER JOIN users u ON u.Username = diu.ProfileId WHERE u.PermissionLevel = ".$permGroup." and u.Active = ".$active." GROUP BY Username ORDER BY Username ASC")->fetchAll();
+      $data = $pdo->query("SELECT DISTINCT(diu.ProfileId) AS Username, u.Occurances AS Occurances, u.OnTheEdge as OnTheEdge FROM dbot_diu diu INNER JOIN users u ON u.Username = diu.ProfileId WHERE u.PermissionLevel = " . $permGroup . " and u.Active = " . $active . " ORDER BY Username ASC")->fetchAll();
       return $data;
    }
 

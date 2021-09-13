@@ -15,8 +15,6 @@ $drops = new DropImageUploads();
 //   $_GET['id'] : 
 //   0;
 
-$maxDrops = count($drops->GetAllUniqueUploads()) / 8;
-
 $auth->Required_User();
 $username = $auth->GetUserId();
 $dropsData = $drops->GetByUsername($username);

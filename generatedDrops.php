@@ -76,7 +76,7 @@ $dropsData = $drops->GetAllDrops();
                                  $dropsData[$i]['Id'],
                                  $dropsData[$i]['Created'],
                                  $dropsData[$i]['LocalUrl'],
-                                 $dropsData[$i]['Description']
+                                 utf8_decode($dropsData[$i]['Description'])
                               );
                            }
                            ?>
@@ -99,7 +99,6 @@ $dropsData = $drops->GetAllDrops();
 }
 
 .profile-header .profile-header-cover {
-    background-image: url(https://bootdey.com/img/Content/bg1.jpg);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

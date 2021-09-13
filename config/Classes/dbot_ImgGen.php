@@ -35,7 +35,7 @@ class Dbot_ImgGen
       $dbConn = new DbConn(); 
       $pdo = $dbConn->GetConnection();
       $data = $pdo->query("SELECT * FROM dbot_imggen ORDER BY `dbot_imggen`.`Id` DESC LIMIT 1")->fetchAll();
-      return $data;
+      return $data[0];
    }
 
    	public function GetAllDrops()

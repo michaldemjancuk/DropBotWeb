@@ -105,6 +105,15 @@ class Users
 		$stmt->execute([$Occurance, $Username]);
 	}
 
+	public function UpdateEdgeStatus($Username, $EdgeStatus)
+	{
+		$dbConn = new DbConn();
+		$pdo = $dbConn->GetConnection();
+		$sql = "UPDATE users SET OnTheEdge = ? Where Username = ?";
+		$stmt= $pdo->prepare($sql);
+		$stmt->execute([$EdgeStatus, $Username]);
+	}
+
 	public function GetAllOccurancesSelect($KeySelected = '')
 	{
 		$data = $this->GetOccurancesList();
@@ -193,6 +202,23 @@ class Users
 		$pdo = $dbConn->GetConnection();
 		$data = $pdo->query("SELECT PermissionLevel FROM users WHERE username = '" . $username . "'")->fetchAll();
 		return $data[0][0];
+	}
+
+	public function GetPermissionLevelsFromTable()
+	{
+		$dbConn = new DbConn(); 
+		$pdo = $dbConn->GetConnection();
+		$data = $pdo->query("SELECT * FROM users_accesses")->fetchAll();
+		return $data;
+	}
+
+	public function SetRightsPermissionGroup($Username, $PermissionLevel)
+	{
+		$dbConn = new DbConn();
+		$pdo = $dbConn->GetConnection();
+		$sql = "UPDATE users SET PermissionLevel = ? Where Username = ?";
+		$stmt= $pdo->prepare($sql);
+		$stmt->execute([$PermissionLevel, $Username]);
 	}
 
 	public function GetProfileImageUrlByUsername($username)

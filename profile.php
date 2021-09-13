@@ -5,10 +5,12 @@ include("config/settings.php");
 include("config/Classes/users.php");
 include("config/Classes/posts.php");
 include("config/Classes/authenticator.php");
+include("config/Classes/dropImageUploads.php");
 
 $auth = new Authenticator();
 $users = new Users();
 $posts = new Posts();
+$dbot_diu = new DropImageUploads();
 $usernameToLoad = (isset($_GET['id'])) ? 
    $_GET['id'] : 
    $auth->GetUserId();
@@ -16,7 +18,7 @@ $usernameToLoad = (isset($_GET['id'])) ?
 $auth->Required_User();
 $userData = $users->GetUserData($usernameToLoad);
 $postsData = $posts->GetByUsername($usernameToLoad);
-
+$imgUploads = $dbot_diu->GetByUsername($usernameToLoad);
 
 ?>
 
@@ -52,12 +54,17 @@ $postsData = $posts->GetByUsername($usernameToLoad);
                   </div>
                   <!-- END profile-header-content -->
                   <!-- BEGIN profile-header-tab -->
-                  <ul class="profile-header-tab nav nav-tabs">
-                     <li class="nav-item disabled"><a href="#profile-post" class="nav-link active show" data-toggle="tab">POSTS</a></li>
-                     <li class="nav-item"><a href="#profile-about" class="nav-link" data-toggle="tab">ABOUT</a></li>
-                     <li class="nav-item"><a href="#profile-photos" class="nav-link" data-toggle="tab">PHOTOS</a></li>
-                     <li class="nav-item"><a href="#profile-videos" class="nav-link" data-toggle="tab">VIDEOS</a></li>
-                     <li class="nav-item"><a href="#profile-friends" class="nav-link" data-toggle="tab">FRIENDS</a></li>
+
+                  <ul class="profile-header-tab nav nav-tabs" id="myTab" role="tablist">
+                     <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="posts-tab" data-bs-toggle="tab" data-bs-target="#posts" type="button" role="tab" aria-controls="posts" aria-selected="true">Posts</button>
+                     </li>
+                     <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="photos-tab" data-bs-toggle="tab" data-bs-target="#photos" type="button" role="tab" aria-controls="photos" aria-selected="false">Photos</button>
+                     </li>
+                     <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="bio-tab" data-bs-toggle="tab" data-bs-target="#bio" type="button" role="tab" aria-controls="bio" aria-selected="false">Bio</button>
+                     </li>
                   </ul>
                   <!-- END profile-header-tab -->
                </div>
@@ -66,9 +73,9 @@ $postsData = $posts->GetByUsername($usernameToLoad);
             <!-- begin profile-content -->
             <div class="profile-content">
                <!-- begin tab-content -->
-               <div class="tab-content p-0">
-                  <!-- begin #profile-post tab -->
-                  <div class="tab-pane fade active show" id="profile-post">
+
+               <div class="tab-content p-0" id="myTabContent">
+                  <div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab">
                      <!-- begin timeline -->
                      <ul class="timeline">
                         <li>
@@ -161,9 +168,27 @@ $postsData = $posts->GetByUsername($usernameToLoad);
                            }
                            ?>
                      </ul>
-                     <!-- end timeline -->
                   </div>
-                  <!-- end #profile-post tab -->
+                  <div class="tab-pane fade" id="photos" role="tabpanel" aria-labelledby="photos-tab">
+                     <ul class="timeline">
+                        <?php 
+                         for ($i = 0; $i < sizeof($imgUploads); ++$i) {
+                           $dbot_diu->BuildPost(
+                              $imgUploads[$i]['Id'],
+                              $imgUploads[$i]['Created'],
+                              $userData['ProfileImageUrl'],
+                              $usernameToLoad,
+                              $imgUploads[$i]['LocalUrl'],
+                              $imgUploads[$i]['LocalUrl']
+                           );
+                        }
+                        ?>
+                     </ul>
+                  </div>
+                  <div class="tab-pane fade" id="bio" role="tabpanel" aria-labelledby="bio-tab">
+                     <ul class="timeline">
+                     </ul>
+                  </div>
                </div>
                <!-- end tab-content -->
             </div>

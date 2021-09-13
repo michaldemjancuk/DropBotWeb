@@ -3,12 +3,10 @@ include(dirname(__FILE__) . "/../config/settings.php");
 include(dirname(__FILE__) . "/../config/dbConn.php");
 include(dirname(__FILE__) . "/../config/Classes/users.php");
 include(dirname(__FILE__) . "/../config/Classes/authenticator.php");
-include(dirname(__FILE__) . "/../config/Classes/dbot_db.php");
 include(dirname(__FILE__) . "/../config/Classes/dropImageUploads.php");
 $auth = new Authenticator();
 $auth->Required_Admin("?target=index.php");
 
-$dbot_db = new Dbot_db();
 $users = new Users();
 $dbot_diu = new DropImageUploads();
 
@@ -36,7 +34,22 @@ switch ($template) {
 		break;
 }
 
-$suggestedDropsCount = round(count($uniqueUsers) / $templateSize);
+$minSuggested = 0;
+$maxSuggested = 0;
+for ($i=0; $i < count($uniqueUsers); $i++) {
+	$occurancesPtOne = $uniqueUsers[$i]["Occurances"][0];
+	$occurancesPtTwo = $uniqueUsers[$i]["Occurances"][1];
+	$minSuggested += $occurancesPtOne;
+	if ($occurancesPtTwo < $occurancesPtOne) 
+		{ $maxSuggested += $occurancesPtOne; }
+	else
+		{ $maxSuggested += $occurancesPtTwo; }
+}
+$minSuggested = floor($minSuggested/$templateSize);
+$maxSuggested = floor($maxSuggested/$templateSize);
+
+
+$suggestedDropsCount = $minSuggested . " up to " . $maxSuggested;
 
 ?>
 
@@ -60,14 +73,15 @@ $suggestedDropsCount = round(count($uniqueUsers) / $templateSize);
 					<div class="row text-center">
 						<div class="col-md-4"><b>Username</b></div>
 						<div class="col-md-4"><b>Drop occurances</b></div>
-						<div class="col-md-4 text-center"><b>Actions</b></div>
+						<div class="col-md-1"><b>Edge</b></div>
+						<div class="col-md-3 text-center"><b>Actions</b></div>
 					</div>
 				</li>
-				<?php for ($i = 0; $i < sizeof($uniqueUsers); ++$i) {  ?>
+				<?php for ($i = 0; $i < sizeof($uniqueUsers); ++$i) {  $userName = $uniqueUsers[$i]['Username']; ?>
 				<li class="list-group-item bg-light">
 					<div class="row text-center">
 						<div class="col-md-4">
-							<b><?php echo $uniqueUsers[$i]['Username']; ?></b>
+							<b><?php echo $userName; ?></b>
 						</div>
 						<div class="col-md-4">
 							<select 
@@ -75,10 +89,25 @@ $suggestedDropsCount = round(count($uniqueUsers) / $templateSize);
 								id="<?php echo $uniqueUsers[$i]['Username']; ?>" 
 								aria-label="User occurances count" 
 								required>
-								<?php $users->GetAllOccurancesSelect($users->GetOccurancesForUser($uniqueUsers[$i]['Username'])); ?>
+								<?php $users->GetAllOccurancesSelect($users->GetOccurancesForUser($userName)); ?>
 							</select>
 						</div>
-						<div class="col-md-4 text-center">
+						<div class="col-md-1"><b>
+							<?php if($uniqueUsers[$i]['OnTheEdge'] == 0) { ?>
+								<img 
+									class="btn-sm btn-warning activate-edge" 
+									id="<?php echo $userName; ?>" 
+									src="/_icons/x.svg"
+								>
+							<?php } else { ?>
+								<img 
+									class="btn-sm btn-success deactivate-edge" 
+									id="<?php echo $userName; ?>" 
+									src="/_icons/check.svg"
+								>
+							<?php } ?>
+						</b></div>
+						<div class="col-md-3 text-center">
 							<b>
 								<a class="btn btn-sm btn-warning" href="/actions/disableAccount.php?Username=<?php echo $uniqueUsers[$i]['Username']; ?>&BackUrl=<?php echo $thisUrlWithParams; ?>">Disable account</a>
 							</b>
@@ -100,54 +129,55 @@ $suggestedDropsCount = round(count($uniqueUsers) / $templateSize);
 		</div>
 		<div class="col">
 			<ul class="list-group">
-				<li class="list-group-item bg-dark text-white">
-					<div class="row text-center">
-						<div class="col-md-8"><b>Configuration</b></div>
-						<div class="col-md-4 text-center"><b>Value</b></div>
-					</div>
-				</li>
-				<li class="list-group-item bg-light">
-					<div class="row text-center">
-						<div class="col-md-8"><b>Unique users for this type of drop:</b></div>
-						<div class="col-md-4 text-center"><b>
-							<?php echo sizeof($uniqueUsers); ?>
-						</b></div>
-					</div>
-				</li>
-				<li class="list-group-item bg-light">
-					<div class="row text-center">
-						<div class="col-md-8"><b>Photos for this type of drop:</b></div>
-						<div class="col-md-4 text-center"><b>
-							<?php echo sizeof($uniqueUploads); ?>
-						</b></div>
-					</div>
-				</li>
-				<li class="list-group-item bg-light">
-					<div class="row text-center">
-						<div class="col-md-8"><b>Unique drops suggested:</b></div>
-						<div class="col-md-4 text-center"><b>
-							<?php echo $suggestedDropsCount; ?>
-						</b></div>
-					</div>
-				</li>
-				<li class="list-group-item bg-light">
-					<div class="row text-center">
-						<div class="col-md-8"><b>Template:</b></div>
-						<div class="col-md-4 text-center"><b>
-							<?php echo $template; ?>
-						</b></div>
-					</div>
-				</li>
-				<li class="list-group-item bg-light">
-					<form method="post" class="row" action="/actions/dbot_processImage.php">
+				<form method="post" class="row" action="/actions/dbot_processImage.php">
+					<li class="list-group-item bg-dark text-white">
+						<div class="row text-center">
+							<div class="col-md-8"><b>Configuration</b></div>
+							<div class="col-md-4 text-center"><b>Value</b></div>
+						</div>
+					</li>
+					<li class="list-group-item bg-light">
+						<div class="row text-center">
+							<div class="col-md-8"><b>Unique users for this type of drop:</b></div>
+							<div class="col-md-4 text-center"><b>
+								<?php echo sizeof($uniqueUsers); ?>
+							</b></div>
+						</div>
+					</li>
+					<li class="list-group-item bg-light">
+						<div class="row text-center">
+							<div class="col-md-8"><b>Photos for this type of drop:</b></div>
+							<div class="col-md-4 text-center"><b>
+								<?php echo sizeof($uniqueUploads); ?>
+							</b></div>
+						</div>
+					</li>
+					<li class="list-group-item bg-light">
+						<div class="row text-center">
+							<div class="col-md-8">
+								<b>Drops generated (<?php echo $suggestedDropsCount; ?>):</b>
+							</div>
+							<div class="col-md-4 col-sm-offset-2 text-center"><b>
+								<input type="number" class="form-control form-control-sm w-25" style="margin-left: 37.5% !important" name="dropsCount" min="<?php echo $minSuggested; ?>" max="<?php echo $maxSuggested; ?>" value="<?php echo $minSuggested; ?>">
+							</b></div>
+						</div>
+					</li>
+					<li class="list-group-item bg-light">
+						<div class="row text-center">
+							<div class="col-md-8"><b>Template:</b></div>
+							<div class="col-md-4 text-center"><b>
+								<?php echo $template; ?>
+							</b></div>
+						</div>
+					</li>
+					<li class="list-group-item bg-light">
 						<div class="col-md-8"></div>
 						<input type="text" name="template" style="display: none;" value="<?php echo $template; ?>">
-						<input type="number" name="dropsCount" style="display: none;" value="<?php echo $suggestedDropsCount; ?>">
 						<input type="number" name="permissionRole" style="display: none;" value="<?php echo $permissionRole; ?>">
 						<div class="col-md-8"></div>
 						<button type="submit" class="btn btn-sm btn-success col-md-4">Generate</button>
-					</form>
-				</li>
+					</li>
+				</form>
 			</ul>
 		</div>
 	</div>
@@ -162,9 +192,31 @@ $suggestedDropsCount = round(count($uniqueUsers) / $templateSize);
 			Occurances:occuranceKey
 		},
 		function(data,status){
-			alert("Update status: " + status);
+			//alert("Update status: " + status);
 		});
 	}
+
+	function ChangeEdgeStatus(username,edgeStatus) {
+		$.post("/actions/user_changeEdgeStatus.php",
+		{
+			Username:username,
+			EdgeStatus:edgeStatus
+		},
+		function(data,status){
+			//alert("Update status: " + status + " (" + username + "," + edgeStatus + ")");
+        	window.location.href= '<?php echo $thisUrlWithParams; ?>';
+		});
+	}
+
+	$(".activate-edge").click(function(){
+	    var username = $(this).attr('id');
+		ChangeEdgeStatus(username,1);
+	});
+
+	$(".deactivate-edge").click(function(){
+	    var username = $(this).attr('id');
+		ChangeEdgeStatus(username,0);
+	});
 
 	$(".GetAllOccurancesSelect").change(function(){
 	    var username = $(this).attr('id');
@@ -172,12 +224,3 @@ $suggestedDropsCount = round(count($uniqueUsers) / $templateSize);
 	    updateUserOccurances(username, occurances);
 	});
 </script>
-
-<?php
-
-function GetSelectForValue()
-{
-	# code...
-}
-
-?>

@@ -59,6 +59,7 @@ $dropsData = $drops->GetAll();
                                             <input class="form-control" name="permissionRole" list="datalistOptions" id="exampleDataList" placeholder="Model group selection" required>
                                             <datalist id="datalistOptions">
                                               <option value="20">Free drop</option>
+                                              <option value="21">Free drop (Velký)</option>
                                               <option value="23">Paid drop less than 3% - 3 times (Velký 3x)</option>
                                               <option value="24">Paid drop less than 3% - Once (Velký 1x)</option>
                                               <option value="25">Paid drop less than 3% (Velký)</option>

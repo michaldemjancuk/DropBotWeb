@@ -35,6 +35,14 @@ class Dbot_db
       $dbConn = new DbConn(); 
       $pdo = $dbConn->GetConnection();
       $data = $pdo->query("SELECT * FROM dbot_db ORDER BY `dbot_db`.`Id` DESC LIMIT 1")->fetchAll();
+      return $data[0];
+   }
+
+   public function GetAll()
+   {
+      $dbConn = new DbConn(); 
+      $pdo = $dbConn->GetConnection();
+      $data = $pdo->query("SELECT * FROM dbot_db ORDER BY `dbot_db`.`Id` DESC")->fetchAll();
       return $data;
    }
 

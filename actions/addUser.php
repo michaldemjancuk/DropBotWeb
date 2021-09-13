@@ -1,4 +1,7 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 include(dirname(__FILE__) . "/../config/dbConn.php");
 include(dirname(__FILE__) . "/../config/Classes/users.php");
@@ -14,11 +17,18 @@ $PageUrl = $_POST["OnlyFans"];
 $PermissionLevel = $_POST['PermissionLevel'];
 $VerificationCode = str_pad(rand(0, pow(10, 4)-1), 4, '0', STR_PAD_LEFT);
 
+echo "Username: " . $Username . "<br>";
+echo "Email: " . $Email . "<br>";
+echo "BirthDate: " . $BirthDate . "<br>";
+echo "OnlyFans: " . $PageUrl . "<br>";
+echo "PermissionLevel: " . $PermissionLevel . "<br>";
+echo "VerificationCode: " . $VerificationCode . "<br>";
+
 $usersClass = new Users();
 
 $usersClass
 	->Add($Username, $Email, $BirthDate, $PageUrl, $VerificationCode, $PermissionLevel);
 
-header('Location: /users.php'); 
+//header('Location: /users.php'); 
 exit();
 ?>
