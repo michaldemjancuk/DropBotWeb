@@ -44,7 +44,7 @@ for ($i=0; $i < (count($splittedImages) < $dropsCount ? $dropsCount : count($spl
   $target_file = $target_dir . $processedImgName;
   $nameWithFolder =  "dropImageUploadsProcessed/" . $processedImgName;
   $imageUrls = array_fill(0, 8, "");
-  $desc = $descClass->GetLastUsedDescription($isFree);
+  $desc = $descClass->GetLastUsedAlways($isFree) ?? $descClass->GetLastUsedDescription($isFree);
   $descClass->UpdateLastUsedDate($desc["Id"]);
   $emj = utf8_decode($desc["EmojiUsing"]);
   $description = utf8_decode($desc["PreUsernameText"]) . "<br>";

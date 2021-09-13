@@ -26,7 +26,15 @@ class Dbot_Descriptions
    {
       $dbConn = new DbConn(); 
       $pdo = $dbConn->GetConnection();
-      $data = $pdo->query("SELECT * FROM dbot_descriptions WHERE Free = " . $free . " ORDER BY LastUsed ASC")->fetchAll();
+      $data = $pdo->query("SELECT * FROM dbot_descriptions WHERE Free = " . $free . " AND UsePolicy = 'If needed' ORDER BY LastUsed ASC")->fetchAll();
+      return $data[0];
+   }
+
+   public function GetLastUsedAlways($free = 1)
+   {
+      $dbConn = new DbConn(); 
+      $pdo = $dbConn->GetConnection();
+      $data = $pdo->query("SELECT * FROM dbot_descriptions WHERE Free = " . $free . " AND UsePolicy = 'Always' ORDER BY LastUsed ASC")->fetchAll();
       return $data[0];
    }
 
@@ -34,7 +42,7 @@ class Dbot_Descriptions
    {
       $dbConn = new DbConn(); 
       $pdo = $dbConn->GetConnection();
-      $data = $pdo->query("SELECT * FROM dbot_descriptions ORDER BY Id")->fetchAll();
+      $data = $pdo->query("SELECT * FROM dbot_descriptions ORDER BY UsePolicy, Id")->fetchAll();
       return $data;
    }
 
@@ -55,6 +63,15 @@ class Dbot_Descriptions
 		$stmt= $pdo->prepare($sql);
 		$stmt->execute([$Id]);
 	}
+
+   public function UpdatePolicy($Id, $PolicySelected)
+   {
+      $dbConn = new DbConn();
+      $pdo = $dbConn->GetConnection();
+      $sql = "UPDATE dbot_descriptions SET UsePolicy = ? Where Id = ?";
+      $stmt= $pdo->prepare($sql);
+      $stmt->execute([$PolicySelected, $Id]);
+   }
 }
 
 

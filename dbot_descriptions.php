@@ -9,9 +9,11 @@ include("config/Classes/dbot_Descriptions.php");
 $users = new Users();
 $auth = new Authenticator();
 $auth->Required_Admin("?target=actions/logout.php");
-
 $descriptionsClass = new Dbot_Descriptions();
+
 $descriptions = $descriptionsClass->GetAll();
+
+$UsePolicyList = array("Never use", "If needed", "Always");
 ?>
 <!DOCTYPE html>
 <html lang="cs">
@@ -43,7 +45,8 @@ $descriptions = $descriptionsClass->GetAll();
 					<div class="col-md-6"><b>Prologue text</b></div>
 					<div class="col-md-1"><b>Emoji</b></div>
 					<div class="col-md-1"><b>Is Free?</b></div>
-					<div class="col-md-4 text-center"><b>Actions</b></div>
+					<div class="col-md-1 text-danger"><b>Use policy</b></div>
+					<div class="col-md-3 text-center"><b>Actions</b></div>
 				</div>
 			</li>
 			<?php for ($i = 0; $i < sizeof($descriptions); ++$i) {  ?>
@@ -58,7 +61,21 @@ $descriptions = $descriptionsClass->GetAll();
 							<img class="btn-sm btn-success" src="/_icons/check.svg">
 						<?php } ?>
 					</b></div>
-					<div class="col-md-4 text-center"><b>
+					<div class="col-md-1"><b>
+						<select class="form-control use-policy-select" id="<?php echo $descriptions[$i]['Id']; ?>" placeholder="Permission level">
+<?php for ($y=0; $y < count($UsePolicyList); $y++) { 
+	if($UsePolicyList[$y] == $descriptions[$i]['UsePolicy']) { ?>
+			<option value="<?php echo $UsePolicyList[$y]; ?>" selected>
+				<?php echo $UsePolicyList[$y]; ?>
+			</option>
+<?php } else { ?>
+			<option value="<?php echo $UsePolicyList[$y] ?>">
+				<?php echo $UsePolicyList[$y]; ?>
+			</option>
+<?php }} ?>
+						</select>	
+					</b></div>
+					<div class="col-md-3 text-center"><b>
 						<a class="btn btn-sm btn-warning disabled" href="/actions/resetPassword.php?Username=<?php echo $usersData[$i]['Id']; ?>" disabled>Edit</a>
 						<a class="btn btn-sm btn-danger" onclick="confirmDelete('<?php echo $usersData[$i]["Username"]; ?>', '/actions/deleteDbot_Description.php?Id=<?php echo $descriptions[$i]['Id']; ?>')">Delete description</a>
 					</b></div>
@@ -108,5 +125,25 @@ $descriptions = $descriptionsClass->GetAll();
     </div>
   </div>
 </div>
+<script type="text/javascript">
+
+	$(".use-policy-select").change(function(){
+	    var idChanged = $(this).attr('id');
+	    var policySelected = $(this).val();
+	    updateDescriptionPolicy(idChanged,policySelected);
+	});
+
+	function updateDescriptionPolicy(id,policySelected) {
+		$.post("/actions/updateDescriptionPolicy.php",
+		{
+			Id:id,
+			PolicySelected:policySelected
+		},
+		function(data,status){
+			alert("Update status: " + status + " (" + id + "," + policySelected + ")");
+		});
+	}
+
+</script>
 </body>
 </html>
