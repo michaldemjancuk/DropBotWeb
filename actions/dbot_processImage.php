@@ -57,11 +57,7 @@ for ($i=0; $i < (count($splittedUsers) < $dropsCount ? $dropsCount : count($spli
 // $imgGenerator->
 //   Combine4by2_Basic_2($unqUploads, $processedImgName);
 
-
-
-// echo $msg;
-
-//header('Location: /generatedDrops.php'); 
+header('Location: /generatedDrops.php'); 
 
 
 function SplitUsersIntoArrays($users, $divideBy=8)
