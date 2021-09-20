@@ -41,6 +41,35 @@ class DropImageUploads
       return $data;
    }
 
+   public function GetByUsernameWithLastUsed($Username, $descend = true)
+   {
+      $dbConn = new DbConn(); 
+      $pdo = $dbConn->GetConnection();
+      if(!$descend)
+         $data = $pdo->query('
+            SELECT diu.*, COALESCE(MAX(dbot_db.Created),"1990-01-01") LastUsed
+            FROM dbot_diu diu
+            LEFT JOIN dbot_imggen_users users
+            ON diu.Id = users.dbot_diu_Id
+            LEFT JOIN dbot_db dbot_db
+            ON users.dbot_db_Id = dbot_db.Id
+            WHERE diu.ProfileId = "' . $Username . '"
+            GROUP BY diu.Id
+            ORDER BY LastUsed ASC, diu.Id ASC')->fetchAll();
+      else
+         $data = $pdo->query('
+            SELECT diu.*, COALESCE(MAX(dbot_db.Created),"1990-01-01") LastUsed
+            FROM dbot_diu diu
+            LEFT JOIN dbot_imggen_users users
+            ON diu.Id = users.dbot_diu_Id
+            LEFT JOIN dbot_db dbot_db
+            ON users.dbot_db_Id = dbot_db.Id
+            WHERE diu.ProfileId = "' . $Username . '"
+            GROUP BY diu.Id
+            ORDER BY LastUsed ASC, diu.Id DESC')->fetchAll();
+      return $data;
+   }
+
    public function GetAll($descend = true)
    {
       $dbConn = new DbConn(); 

@@ -92,11 +92,11 @@ function SwapEdgeUsers($splittedImages)
   for ($i=0; $i < count($splittedImages); $i++) { 
     list($isOnStart, $isOnEnd) = array($splittedImages[$i][0]["OnTheEdge"] == 1, false);
     echo "isOnStart?: ".$isOnStart."<br>";
-    for ($y=1; $y < count($splittedImages[$i]); $y++) { 
+    for ($y=1; $y < /*count($splittedImages[$i])*/ 8; $y++) { 
       if ($splittedImages[$i][$y]["OnTheEdge"] == 1) {
         if (!$isOnEnd && $isOnStart) {
-          $localVar = $splittedImages[$i][count($splittedImages[$i])-1];
-          $splittedImages[$i][count($splittedImages[$i])-1] = $splittedImages[$i][$y];
+          $localVar = $splittedImages[$i][1];
+          $splittedImages[$i][1] = $splittedImages[$i][$y];
           $splittedImages[$i][$y] = $localVar;
           $isOnEnd = true;
           break;
@@ -196,7 +196,7 @@ function SimplifyOccurances($uniqueUsersWithOccurances, $EF_DIU)
   $imagesArray = array_fill(0, count($uniqueUsersWithOccurances), "");
   for ($i=0; $i < count($uniqueUsersWithOccurances); $i++) { 
     $uniqueUsersWithOccurancesValue = $uniqueUsersWithOccurances[$i]["Occurances"];
-    $imagesArray[$i] = $EF_DIU->GetByUsername($uniqueUsersWithOccurances[$i]["Username"]); // Load users uploads
+    $imagesArray[$i] = $EF_DIU->GetByUsernameWithLastUsed($uniqueUsersWithOccurances[$i]["Username"]); // Load users uploads
     if ($uniqueUsersWithOccurancesValue > 9) {
       $uniqueUsersWithOccurancesValue = $uniqueUsersWithOccurancesValue[strlen($uniqueUsersWithOccurancesValue)-1];
       $uniqueUsersWithOccurances[$i]['Occurances'] = $uniqueUsersWithOccurancesValue; 
@@ -205,6 +205,10 @@ function SimplifyOccurances($uniqueUsersWithOccurances, $EF_DIU)
       ($highestOccurance < $uniqueUsersWithOccurancesValue) ? 
         $uniqueUsersWithOccurancesValue : $highestOccurance;
   }
+            echo $i . ", ";
+            echo "userUploadsArray:<pre>";
+            var_export($uniqueUsersWithOccurances);
+            echo "</pre>";
   return array($uniqueUsersWithOccurances, $highestOccurance, $imagesArray);
 }
 
