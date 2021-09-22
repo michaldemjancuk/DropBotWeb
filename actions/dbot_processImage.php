@@ -49,7 +49,7 @@ for ($i=0; $i < (count($splittedImages) < $dropsCount ? $dropsCount : count($spl
   $emj = utf8_decode($desc["EmojiUsing"]);
   $description = utf8_decode($desc["PreUsernameText"]) . "<br>";
   for ($y=0; $y < 4/*count($splittedImages[$i]) / 2*/; $y++) { 
-    $description .= $emj . "@" . $splittedImages[$i][$y*2]['ProfileId'] . $emj . 
+    $description .= $emj . "@" . $splittedImages[$i][$y*2]['ProfileId'] . "&nbsp;&nbsp;" . $emj . 
       "@" . $splittedImages[$i][$y*2+1]['ProfileId'] . "<br>";
     $imageUrls[$y*2] = $splittedImages[$i][$y*2]['LocalUrl'];
     $imageUrls[$y*2+1] = $splittedImages[$i][$y*2+1]['LocalUrl'];
