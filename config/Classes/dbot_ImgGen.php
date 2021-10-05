@@ -42,7 +42,7 @@ class Dbot_ImgGen
    	{
    		$dbConn = new dbConn();
    		$pdo = $dbConn->GetConnection();
-   		$data = $pdo->query("SELECT * FROM dbot_imggen ORDER BY `dbot_imggen`.`Created` DESC")->fetchAll();
+   		$data = $pdo->query("SELECT * FROM dbot_imggen ORDER BY `dbot_imggen`.`Created` DESC LIMIT 50")->fetchAll();
    		return $data;
    	}
 

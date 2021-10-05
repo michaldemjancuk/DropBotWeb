@@ -1,5 +1,4 @@
 <?php
-$START_TIME = microtime(true);
 include(dirname(__FILE__) . "/../config/settings.php");
 include(dirname(__FILE__) . "/../config/dbConn.php");
 include(dirname(__FILE__) . "/../libs/custom/imgGen.php");
@@ -14,17 +13,16 @@ include(dirname(__FILE__) . "/../config/Classes/dbot_Descriptions.php");
 $auth = new Authenticator();
 $auth->Required_Admin("?target=index.php");
 
-
-$dropsCount = $_POST["dropsCount"] ?? $_GET["dropsCount"];
-$template = $_POST["template"] ?? $_GET["template"];
-$permissionRole = $_POST["permissionRole"] ?? $_GET["permissionRole"];
+$dropsCount = $_POST["dropsCount"];
+$template = $_POST["template"];
+$permissionRole = $_POST["permissionRole"];
 $isFree = ($permissionRole == 26 || $permissionRole == 25) ? 0 : 1;
 $dropSize = 8;
 $dirnameThis = dirname(__FILE__);
 
-// if(!$auth->IsSuperAdmin()){
-//   header('Location: /actions/dbot_processImage2.php?dropsCount='.$dropsCount.'&template='.$template.'&permissionRole='-$permissionRole);
-// }
+if(!$auth->IsSuperAdmin()){
+  header('Location: /actions/dbot_processImage2.php?dropsCount='.$dropsCount.'&template='.$template.'&permissionRole='.$permissionRole);
+}
 
 $dbot_db = new Dbot_db();
 $dbot_ImgGen = new Dbot_ImgGen();
@@ -37,13 +35,10 @@ $dbot_dbId = $dbot_db->GetLast()["Id"];
 
 $uniqueUsersWithOccurances = $dbot_diu->GetAllUniqueUsersWithPhotoInPermGroup($permissionRole);
 
-$imagesArray = PrepareImagesArray2($dropsCount, $dropSize, $uniqueUsersWithOccurances, $dbot_diu, $auth);
-
-//$imagesArray = PrepareImagesArray($dropsCount, $dropSize, $uniqueUsersWithOccurances, $dbot_diu, $auth);
+$imagesArray = PrepareImagesArray($dropsCount, $dropSize, $uniqueUsersWithOccurances, $dbot_diu, $auth);
 shuffle($imagesArray);
 $splittedImages = SplitImagesIntoArrays($imagesArray);
 $splittedImages = SwapEdgeUsers($splittedImages);
-$splittedImages = CheckForDuplicitiesInArray2($splittedImages);
 
 
 for ($i=0; $i < (count($splittedImages) < $dropsCount ? $dropsCount : count($splittedImages)) ; $i++) { 
@@ -64,11 +59,13 @@ for ($i=0; $i < (count($splittedImages) < $dropsCount ? $dropsCount : count($spl
     $imageUrls[$y*2+1] = $splittedImages[$i][$y*2+1]['LocalUrl'];
   }
 
+
+
   echo $description . "<br>";
   echo $nameWithFolder . "<br>";
   echo $dbot_dbId . "<br>";
 
- // if(!$auth->IsSuperAdmin()){
+  if(!$auth->IsSuperAdmin()){
     $imgGenerator->
       Combine4by2_Basic($imageUrls, $processedImgName);
   $dbot_ImgGen->Add($nameWithFolder, utf8_encode($description), $dbot_dbId);
@@ -82,164 +79,14 @@ for ($i=0; $i < (count($splittedImages) < $dropsCount ? $dropsCount : count($spl
       0 // Not proofedd
     );
   }
+  }
 }
 
-  echo "<script>alert('Done in " . round(microtime(true) - $START_TIME,3) . " seconds');</script>";
 if(!$auth->IsSuperAdmin()){
   header('Location: /generatedDrops.php'); 
   echo "<script>window.location.href='/generatedDrops.php';</script>";
 }
 
-function CheckForDuplicitiesInArray($splittedImages)
-{
-  for ($i=count($splittedImages); $i > 0; $i--) { 
-    $usersInArray = array();
-    $copiedUsers = 0;
-    for ($y=0; $y < count($splittedImages[$i]); $y++) { 
-      if(in_array($splittedImages[$i][$y]["ProfileId"], $usersInArray))
-      {
-        if($splittedImages[$i-1][$copiedUsers]["ProfileId"] != $splittedImages[$i][$y]["ProfileId"])
-        {
-          $copiedUser = $splittedImages[$i-1][$copiedUsers];
-          $splittedImages[$i-1][$copiedUsers] = $splittedImages[$i][$y];
-          $splittedImages[$i][$y] = $copiedUser;
-        }
-        else
-        {
-          $y--;
-        }
-
-        $copiedUsers++;
-      }
-      $usersInArray[count($usersInArray)] = $splittedImages[$i][$y]["ProfileId"];
-    }
-  }
-  return $splittedImages;
-}
-
-function CheckForDuplicitiesInArray2($splittedImages)
-{
-  for ($i=0; $i < count($splittedImages); $i++) { 
-    $usersInArray = array();
-    $copiedUsers = 0;
-    for ($y=0; $y < count($splittedImages[$i]); $y++) { 
-      if(in_array($splittedImages[$i][$y]["ProfileId"], $usersInArray))
-      {
-        if( 
-          $i + 1 != count($splittedImages) &&
-          $splittedImages[$i+1][$copiedUsers]["ProfileId"] != $splittedImages[$i][$y]["ProfileId"]
-        ){
-          $copiedUser = $splittedImages[$i+1][$copiedUsers];
-          $splittedImages[$i+1][$copiedUsers] = $splittedImages[$i][$y];
-          $splittedImages[$i][$y] = $copiedUser;
-        }
-        elseif (
-          $i + 1 == count($splittedImages) &&
-          $splittedImages[0][$copiedUsers]["ProfileId"] != $splittedImages[$i][$y]["ProfileId"]
-        ){
-          $copiedUser = $splittedImages[0][$copiedUsers];
-          $splittedImages[0][$copiedUsers] = $splittedImages[$i][$y];
-          $splittedImages[$i][$y] = $copiedUser;
-        }
-        else
-        {
-          $y--;
-        }
-
-        $copiedUsers++;
-      }
-      $usersInArray[count($usersInArray)] = $splittedImages[$i][$y]["ProfileId"];
-    }
-  }
-  return $splittedImages;
-}
-
-function PrepareImagesArray2($dropsCount, $dropSize, $uniqueUsersWithOccurancez, $dbot_diu, $auth)
-{
-  $uniqueUsersWithOccurances = $uniqueUsersWithOccurancez;
-  $imageCount = $dropsCount * $dropSize;
-  $imagesArray = array();
-  $rangedIDs = array();
-  list($uniqueUsersWithOccurances, $highestOccurance, $userUploadsArray) = GetUserData($uniqueUsersWithOccurances, $dbot_diu);
-
-  for ($i=0; $i < count($uniqueUsersWithOccurances) ; $i++) { //for number of users fill those with occurances set
-    
-    if($uniqueUsersWithOccurances[$i]["Occurances"] < 9){
-      
-      for ($y=0; $y < count($userUploadsArray[$i]); $y++) { 
-        
-        $imagesArray[count($imagesArray)] = $userUploadsArray[$i][$y];
-        $imagesArray[count($imagesArray)-1]["OnTheEdge"] = $uniqueUsersWithOccurances[$i]["OnTheEdge"];
-        $uniqueUsersWithOccurances[$i]["Occurances"] = $uniqueUsersWithOccurances[$i]["Occurances"] - 1;
-        
-        if($uniqueUsersWithOccurances[$i]["Occurances"] == 0) 
-
-          break;
-      }
-    }
-    else
-    {
-      $rangedIDs[count($rangedIDs)] = $i;
-    }
-  }
-
-  for ($i=0; $i <= $highestOccurance+1; $i++) { 
-    for ($y=0; $y < count($rangedIDs); $y++) { 
-      if($rangedIDs[$y]!= null && isset($userUploadsArray[$rangedIDs[$y]][$i]))
-      {
-        $imagesArray[count($imagesArray)] = $userUploadsArray[$rangedIDs[$y]][$i];
-        $imagesArray[count($imagesArray)-1]["OnTheEdge"] = $uniqueUsersWithOccurances[$rangedIDs[$y]]["OnTheEdge"];
-        $uniqueUsersWithOccurances[$rangedIDs[$y]]["Occurances"] = $uniqueUsersWithOccurances[$rangedIDs[$y]]["Occurances"] - 11;
-      }
-      if($uniqueUsersWithOccurances[$rangedIDs[$y]]["Occurances"] <= 0)
-        $rangedIDs[$y] = null;
-      if($imageCount == count($imagesArray))
-        break;
-
-    }
-    if($imageCount == count($imagesArray))
-      break;
-  }
-
-  {
-
-    echo "imagesArray<pre>";
-    var_export($imagesArray);
-    echo "</pre>";
-
-
-    echo "uniqueUsersWithOccurances<pre>";
-    var_export($uniqueUsersWithOccurances);
-    echo "</pre>";
-
-    echo "userUploadsArray<pre>";
-    var_export($userUploadsArray);
-    echo "</pre>";
-
-
-    echo "rangedIDs<pre>";
-    var_export($rangedIDs);
-    echo "</pre>";
-  
-    echo "highestOccurance: " . $highestOccurance;
-  }
-
-  return $imagesArray;
-}
-
-function GetUserData($uniqueUsersWithOccurances, $EF_DIU)
-{
-  $highestOccurance = null;
-  $imagesArray = array_fill(0, count($uniqueUsersWithOccurances), "");
-  for ($i=0; $i < count($uniqueUsersWithOccurances); $i++) { 
-    $uniqueUsersWithOccurancesValue = $uniqueUsersWithOccurances[$i]["Occurances"];
-    $imagesArray[$i] = $EF_DIU->GetByUsernameWithLastUsed($uniqueUsersWithOccurances[$i]["Username"]); // Load users uploads
-    $highestOccurance = 
-      ($highestOccurance < $uniqueUsersWithOccurancesValue[0]) ? 
-        $uniqueUsersWithOccurancesValue[0] : $highestOccurance;
-  }
-  return array($uniqueUsersWithOccurances, $highestOccurance, $imagesArray);
-}
 
 function SwapEdgeUsers($splittedImages)
 {
@@ -270,6 +117,7 @@ function SwapEdgeUsers($splittedImages)
   return $splittedImages;
 }
 
+
 function SplitImagesIntoArrays($users, $divideBy=8)
 {
   $auth = new Authenticator();
@@ -290,6 +138,59 @@ function SplitImagesIntoArrays($users, $divideBy=8)
     echo "</pre>";
   }
   return $output;
+}
+
+function PrepareImagesArray($dropsCount, $dropSize, $uniqueUsersWithOccurances, $EF_DIU, $EF_AUTH)
+{
+  $imageCount = $dropsCount * $dropSize;
+  echo "ImageCount: " . $imageCount;
+  $imagesArray = array_fill(0, $imageCount, "");
+  $overflowIndex = count($uniqueUsersWithOccurances);
+  list($uniqueUsersWithOccurances, $highestOccurance, $userUploadsArray) 
+    = SimplifyOccurances($uniqueUsersWithOccurances, $EF_DIU);
+  for ($i=0; $i < count($uniqueUsersWithOccurances); $i++) { 
+      $imagesArray[$i] = $userUploadsArray[$i][0];
+      $imagesArray[$i] += ['OnTheEdge' => $uniqueUsersWithOccurances[$i]["OnTheEdge"]];
+      $uniqueUsersWithOccurances[$i]["Occurances"] = $uniqueUsersWithOccurances[$i]["Occurances"] - 1;
+  }
+  // if($EF_AUTH->IsSuperAdmin()){
+  //   echo "<pre>";
+  //   var_export($uniqueUsersWithOccurances);
+  //   echo "</pre>";
+  // }
+  for ($rotations=1; $rotations < $highestOccurance; $rotations++) { 
+    if(count($imagesArray) == $imageCount)
+      break;
+    for ($i=0; $i < (count($uniqueUsersWithOccurances)-1); $i++) { 
+      if(count($imagesArray) == $imageCount)
+        break;
+      if($uniqueUsersWithOccurances[$i]["Occurances"] > 0)
+      {
+        if(count($userUploadsArray[$i]) >= $rotations)
+          { 
+            // echo $i . ", ";
+            // echo "userUploadsArray:<pre>";
+            // var_export(['OnTheEdge' => $uniqueUsersWithOccurances[$i]["OnTheEdge"]]);
+            // echo "</pre>";
+            $imagesArray[$overflowIndex] = $userUploadsArray[$i][$rotations-1];
+            $imagesArray[$overflowIndex] += ['OnTheEdge' => $uniqueUsersWithOccurances[$i]["OnTheEdge"]];
+           }
+        else 
+          { 
+            $imagesArray[$overflowIndex] = $userUploadsArray[$i][0];
+            $imagesArray[$overflowIndex] += ['OnTheEdge' => $uniqueUsersWithOccurances[$i]["OnTheEdge"]];
+          }
+        $overflowIndex++;
+        $uniqueUsersWithOccurances[$i]["Occurances"] = $uniqueUsersWithOccurances[$i]["Occurances"] - 1;
+        if($overflowIndex == $imageCount)
+          break;
+      }
+    }
+    if($overflowIndex == $imageCount)
+      break;
+  }
+  echo "<br>imagesArray: " . count($imagesArray);
+  return $imagesArray;
 }
 
 // Automatically use the highest value from occurances range (set the highest value)
