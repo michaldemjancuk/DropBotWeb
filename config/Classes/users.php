@@ -114,6 +114,15 @@ class Users
 		$stmt->execute([$EdgeStatus, $Username]);
 	}
 
+	public function UpdateNotGroupStatus($Username, $NotGroup)
+	{
+		$dbConn = new DbConn();
+		$pdo = $dbConn->GetConnection();
+		$sql = "UPDATE users SET NotGroup = ? Where Username = ?";
+		$stmt= $pdo->prepare($sql);
+		$stmt->execute([$NotGroup, $Username]);
+	}
+
 	public function GetAllOccurancesSelect($KeySelected = '')
 	{
 		$data = $this->GetOccurancesList();

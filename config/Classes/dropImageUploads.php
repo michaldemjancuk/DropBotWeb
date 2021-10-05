@@ -111,7 +111,7 @@ class DropImageUploads
    {
       $dbConn = new DbConn(); 
       $pdo = $dbConn->GetConnection();
-      $data = $pdo->query("SELECT DISTINCT(diu.ProfileId) AS Username, u.Occurances AS Occurances, u.OnTheEdge as OnTheEdge FROM dbot_diu diu INNER JOIN users u ON u.Username = diu.ProfileId WHERE u.PermissionLevel = " . $permGroup . " and u.Active = " . $active . " ORDER BY Username ASC")->fetchAll();
+      $data = $pdo->query("SELECT DISTINCT(diu.ProfileId) AS Username, u.Occurances AS Occurances, u.OnTheEdge as OnTheEdge, u.NotGroup as NotGroup FROM dbot_diu diu INNER JOIN users u ON u.Username = diu.ProfileId WHERE u.PermissionLevel = " . $permGroup . " and u.Active = " . $active . " ORDER BY Username ASC")->fetchAll();
       return $data;
    }
 

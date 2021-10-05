@@ -67,13 +67,14 @@ $suggestedDropsCount = $minSuggested . " up to " . $maxSuggested;
 
 <body class="bg-light" style="width: 99%">
 	<div class="row">
-		<div class="col">
+		<div class="col-7">
 			<ul class="list-group">
 				<li class="list-group-item bg-dark text-white">
 					<div class="row text-center">
 						<div class="col-md-4"><b>Username</b></div>
-						<div class="col-md-4"><b>Drop occurances</b></div>
+						<div class="col-md-3"><b>Drop occurances</b></div>
 						<div class="col-md-1"><b>Edge</b></div>
+						<div class="col-md-1"><b>NotGroup</b></div>
 						<div class="col-md-3 text-center"><b>Actions</b></div>
 					</div>
 				</li>
@@ -83,7 +84,7 @@ $suggestedDropsCount = $minSuggested . " up to " . $maxSuggested;
 						<div class="col-md-4">
 							<b><?php echo $userName; ?></b>
 						</div>
-						<div class="col-md-4">
+						<div class="col-md-3">
 							<select 
 								class="form-select GetAllOccurancesSelect" 
 								id="<?php echo $uniqueUsers[$i]['Username']; ?>" 
@@ -102,6 +103,21 @@ $suggestedDropsCount = $minSuggested . " up to " . $maxSuggested;
 							<?php } else { ?>
 								<img 
 									class="btn-sm btn-success deactivate-edge" 
+									id="<?php echo $userName; ?>" 
+									src="/_icons/check.svg"
+								>
+							<?php } ?>
+						</b></div>
+						<div class="col-md-1"><b>
+							<?php if($uniqueUsers[$i]['NotGroup'] == 0) { ?>
+								<img 
+									class="btn-sm btn-warning activate-notgroup" 
+									id="<?php echo $userName; ?>" 
+									src="/_icons/x.svg"
+								>
+							<?php } else { ?>
+								<img 
+									class="btn-sm btn-success deactivate-notgroup" 
 									id="<?php echo $userName; ?>" 
 									src="/_icons/check.svg"
 								>
@@ -127,7 +143,7 @@ $suggestedDropsCount = $minSuggested . " up to " . $maxSuggested;
 			<?php } ?>
 			</ul>
 		</div>
-		<div class="col">
+		<div class="col-5">
 			<ul class="list-group">
 				<form method="post" class="row" action="/actions/dbot_processImage.php">
 					<li class="list-group-item bg-dark text-white">
@@ -216,6 +232,28 @@ $suggestedDropsCount = $minSuggested . " up to " . $maxSuggested;
 	$(".deactivate-edge").click(function(){
 	    var username = $(this).attr('id');
 		ChangeEdgeStatus(username,0);
+	});
+
+	function ChangeNotGroupStatus(username,notGroupStatus) {
+		$.post("/actions/user_changeNotGroupStatus.php",
+		{
+			Username:username,
+			NotGroup:notGroupStatus
+		},
+		function(data,status){
+			//alert("Update status: " + status + " (" + username + "," + notGroupStatus + ")");
+        	window.location.href= '<?php echo $thisUrlWithParams; ?>';
+		});
+	}
+
+	$(".activate-notgroup").click(function(){
+	    var username = $(this).attr('id');
+		ChangeNotGroupStatus(username,1);
+	});
+
+	$(".deactivate-notgroup").click(function(){
+	    var username = $(this).attr('id');
+		ChangeNotGroupStatus(username,0);
 	});
 
 	$(".GetAllOccurancesSelect").change(function(){

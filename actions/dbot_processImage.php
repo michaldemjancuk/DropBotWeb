@@ -42,8 +42,9 @@ $imagesArray = PrepareImagesArray2($dropsCount, $dropSize, $uniqueUsersWithOccur
 //$imagesArray = PrepareImagesArray($dropsCount, $dropSize, $uniqueUsersWithOccurances, $dbot_diu, $auth);
 shuffle($imagesArray);
 $splittedImages = SplitImagesIntoArrays($imagesArray);
+$splittedImages = SwapNotGroupUsers($splittedImages);
 $splittedImages = SwapEdgeUsers($splittedImages);
-$splittedImages = CheckForDuplicitiesInArray2($splittedImages);
+$splittedImages = CheckForDuplicitiesInArray($splittedImages);
 
 
 for ($i=0; $i < (count($splittedImages) < $dropsCount ? $dropsCount : count($splittedImages)) ; $i++) { 
@@ -91,33 +92,6 @@ if(!$auth->IsSuperAdmin()){
 }
 
 function CheckForDuplicitiesInArray($splittedImages)
-{
-  for ($i=count($splittedImages); $i > 0; $i--) { 
-    $usersInArray = array();
-    $copiedUsers = 0;
-    for ($y=0; $y < count($splittedImages[$i]); $y++) { 
-      if(in_array($splittedImages[$i][$y]["ProfileId"], $usersInArray))
-      {
-        if($splittedImages[$i-1][$copiedUsers]["ProfileId"] != $splittedImages[$i][$y]["ProfileId"])
-        {
-          $copiedUser = $splittedImages[$i-1][$copiedUsers];
-          $splittedImages[$i-1][$copiedUsers] = $splittedImages[$i][$y];
-          $splittedImages[$i][$y] = $copiedUser;
-        }
-        else
-        {
-          $y--;
-        }
-
-        $copiedUsers++;
-      }
-      $usersInArray[count($usersInArray)] = $splittedImages[$i][$y]["ProfileId"];
-    }
-  }
-  return $splittedImages;
-}
-
-function CheckForDuplicitiesInArray2($splittedImages)
 {
   for ($i=0; $i < count($splittedImages); $i++) { 
     $usersInArray = array();
@@ -239,6 +213,34 @@ function GetUserData($uniqueUsersWithOccurances, $EF_DIU)
         $uniqueUsersWithOccurancesValue[0] : $highestOccurance;
   }
   return array($uniqueUsersWithOccurances, $highestOccurance, $imagesArray);
+}
+
+function SwapNotGroupUsers($splittedImages)
+{
+  for ($i=0; $i < count($splittedImages); $i++) { 
+    $NotGroupAlredyContainedCount = 0;
+    for ($y=0; $y < count($splittedImages[$i]); $y++) { 
+      if ($splittedImages[$i][$y]["NotGroup"] == 1) {
+        if ($NotGroupAlredyContainedCount >= 0 && $NotGroupAlredyContainedCount < count($splittedImages[$i])) {
+          if ($splittedImages[$i][$NotGroupAlredyContainedCount]["NotGroup"] == 0) {
+            $localMemory = $splittedImages[$i][$NotGroupAlredyContainedCount];
+            $splittedImages[$i][$NotGroupAlredyContainedCount] = $splittedImages[$i][$y];
+            $splittedImages[$i][$y] = $localMemory;
+            $NotGroupAlredyContainedCount++;
+          }
+          else{
+            $NotGroupAlredyContainedCount++;
+            $y--;
+            break;
+          }
+        }
+        elseif ($NotGroupAlredyContainedCount == count($splittedImages[$i])) {
+          break;
+        }
+      }
+    }
+  }
+  return $splittedImages;
 }
 
 function SwapEdgeUsers($splittedImages)
