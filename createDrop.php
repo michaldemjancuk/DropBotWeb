@@ -19,7 +19,7 @@ $maxDrops = count($drops->GetAllUniqueUploads()) / 8;
 
 $auth->Required_Admin();
 $username = $auth->GetUserId();
-$dropsData = $drops->GetAll();
+$dropsData = $drops->GetAllUniqueUploads();
 //$posts->AddView($idToLoad, $postData['Views'] + 1);
 ?>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">

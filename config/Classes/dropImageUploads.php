@@ -95,7 +95,7 @@ class DropImageUploads
    {
       $dbConn = new DbConn(); 
       $pdo = $dbConn->GetConnection();
-      $data = $pdo->query("SELECT * FROM dbot_diu ORDER BY `dbot_diu`.`Id` ASC")->fetchAll();
+      $data = $pdo->query("SELECT * FROM dbot_diu ORDER BY `dbot_diu`.`Id` DESC LIMIT 25")->fetchAll();
       return $data;
    }
 
