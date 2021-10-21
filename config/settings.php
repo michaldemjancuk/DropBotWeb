@@ -4,7 +4,7 @@ function IndexSettings()
 {
 	return array(
 		// >> DO NOT MODIFY <<
-	    "Version" => "0.1.3_Beta",
+	    "Version" => "0.1.4_Beta",
 		// >> DO NOT MODIFY <<
 		// * Report bug url adress *
 	    "ReportBugUrl" => "../bugs/",
