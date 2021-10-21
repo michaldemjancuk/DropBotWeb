@@ -18,7 +18,7 @@ function AllSettings()
 {
 	return array(
 		// >> DO NOT MODIFY <<
-	    "HomepageURL" => "https://michaldemjancuk.cz/"
+	    "HomepageURL" => "http://www.michaldemjancuk.cz/"
 	);
 }
 

@@ -145,6 +145,7 @@ function PrepareImagesArray($dropsCount, $dropSize, $uniqueUsersWithOccurancez, 
         
         $imagesArray[count($imagesArray)] = $userUploadsArray[$i][$y];
         $imagesArray[count($imagesArray)-1]["OnTheEdge"] = $uniqueUsersWithOccurances[$i]["OnTheEdge"];
+        $imagesArray[count($imagesArray)-1]["NotGroup"] = $uniqueUsersWithOccurances[$i]["NotGroup"];
         $uniqueUsersWithOccurances[$i]["Occurances"] = $uniqueUsersWithOccurances[$i]["Occurances"] - 1;
         
         if($uniqueUsersWithOccurances[$i]["Occurances"] == 0) 
@@ -164,12 +165,14 @@ function PrepareImagesArray($dropsCount, $dropSize, $uniqueUsersWithOccurancez, 
       {
         $imagesArray[count($imagesArray)] = $userUploadsArray[$rangedIDs[$y]][$i];
         $imagesArray[count($imagesArray)-1]["OnTheEdge"] = $uniqueUsersWithOccurances[$rangedIDs[$y]]["OnTheEdge"];
+        $imagesArray[count($imagesArray)-1]["NotGroup"] = $uniqueUsersWithOccurances[$rangedIDs[$y]]["NotGroup"];
         $uniqueUsersWithOccurances[$rangedIDs[$y]]["Occurances"] = $uniqueUsersWithOccurances[$rangedIDs[$y]]["Occurances"] - 11;
       }
       else // If user don't have enough photos to be used (use his old images)
       {
-        $imagesArray[count($imagesArray)] = $userUploadsArray[$rangedIDs[$y]][count($userUploadsArray[$rangedIDs[$y]]-1)];
+        $imagesArray[count($imagesArray)] = $userUploadsArray[$rangedIDs[$y]][count($userUploadsArray[$rangedIDs[$y]])-1];
         $imagesArray[count($imagesArray)-1]["OnTheEdge"] = $uniqueUsersWithOccurances[$rangedIDs[$y]]["OnTheEdge"];
+        $imagesArray[count($imagesArray)-1]["NotGroup"] = $uniqueUsersWithOccurances[$rangedIDs[$y]]["NotGroup"];
         $uniqueUsersWithOccurances[$rangedIDs[$y]]["Occurances"] = $uniqueUsersWithOccurances[$rangedIDs[$y]]["Occurances"] - 11;
       }
       if($uniqueUsersWithOccurances[$rangedIDs[$y]]["Occurances"] <= 0) // If user has been used for all of his occuraces, don't use him
@@ -226,7 +229,7 @@ function SwapNotGroupUsers($splittedImages)
 {
   for ($i=0; $i < count($splittedImages); $i++) { 
     $NotGroupAlredyContainedCount = 0;
-    for ($y=0; $y < count($splittedImages[$i]); $y++) { 
+    for ($y=0; $y < count($splittedImages[$i]); $y++) {
       if ($splittedImages[$i][$y]["NotGroup"] == 1) {
         if ($NotGroupAlredyContainedCount >= 0 && $NotGroupAlredyContainedCount < count($splittedImages[$i])) {
           if ($splittedImages[$i][$NotGroupAlredyContainedCount]["NotGroup"] == 0) {
