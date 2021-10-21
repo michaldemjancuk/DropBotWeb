@@ -37,14 +37,14 @@ $dbot_dbId = $dbot_db->GetLast()["Id"];
 
 $uniqueUsersWithOccurances = $dbot_diu->GetAllUniqueUsersWithPhotoInPermGroup($permissionRole);
 
-$imagesArray = PrepareImagesArray2($dropsCount, $dropSize, $uniqueUsersWithOccurances, $dbot_diu, $auth);
+$imagesArray = PrepareImagesArray($dropsCount, $dropSize, $uniqueUsersWithOccurances, $dbot_diu, $auth);
 
-//$imagesArray = PrepareImagesArray($dropsCount, $dropSize, $uniqueUsersWithOccurances, $dbot_diu, $auth);
 shuffle($imagesArray);
 $splittedImages = SplitImagesIntoArrays($imagesArray);
 $splittedImages = SwapNotGroupUsers($splittedImages);
 $splittedImages = SwapEdgeUsers($splittedImages);
 $splittedImages = CheckForDuplicitiesInArray($splittedImages);
+$splittedImages = SwapEdgeUsers($splittedImages);
 
 
 for ($i=0; $i < (count($splittedImages) < $dropsCount ? $dropsCount : count($splittedImages)) ; $i++) { 
@@ -128,7 +128,7 @@ function CheckForDuplicitiesInArray($splittedImages)
   return $splittedImages;
 }
 
-function PrepareImagesArray2($dropsCount, $dropSize, $uniqueUsersWithOccurancez, $dbot_diu, $auth)
+function PrepareImagesArray($dropsCount, $dropSize, $uniqueUsersWithOccurancez, $dbot_diu, $auth)
 {
   $uniqueUsersWithOccurances = $uniqueUsersWithOccurancez;
   $imageCount = $dropsCount * $dropSize;
@@ -140,6 +140,7 @@ function PrepareImagesArray2($dropsCount, $dropSize, $uniqueUsersWithOccurancez,
     
     if($uniqueUsersWithOccurances[$i]["Occurances"] < 9){
       
+      //for ($y=0; $y < count($userUploadsArray[$i]); $y++) { 
       for ($y=0; $y < count($userUploadsArray[$i]); $y++) { 
         
         $imagesArray[count($imagesArray)] = $userUploadsArray[$i][$y];
@@ -159,15 +160,21 @@ function PrepareImagesArray2($dropsCount, $dropSize, $uniqueUsersWithOccurancez,
 
   for ($i=0; $i <= $highestOccurance+1; $i++) { 
     for ($y=0; $y < count($rangedIDs); $y++) { 
-      if($rangedIDs[$y]!= null && isset($userUploadsArray[$rangedIDs[$y]][$i]))
+      if($rangedIDs[$y]!= null && isset($userUploadsArray[$rangedIDs[$y]][$i])) // If user has enough images for another use
       {
         $imagesArray[count($imagesArray)] = $userUploadsArray[$rangedIDs[$y]][$i];
         $imagesArray[count($imagesArray)-1]["OnTheEdge"] = $uniqueUsersWithOccurances[$rangedIDs[$y]]["OnTheEdge"];
         $uniqueUsersWithOccurances[$rangedIDs[$y]]["Occurances"] = $uniqueUsersWithOccurances[$rangedIDs[$y]]["Occurances"] - 11;
       }
-      if($uniqueUsersWithOccurances[$rangedIDs[$y]]["Occurances"] <= 0)
+      else // If user don't have enough photos to be used (use his old images)
+      {
+        $imagesArray[count($imagesArray)] = $userUploadsArray[$rangedIDs[$y]][count($userUploadsArray[$rangedIDs[$y]]-1)];
+        $imagesArray[count($imagesArray)-1]["OnTheEdge"] = $uniqueUsersWithOccurances[$rangedIDs[$y]]["OnTheEdge"];
+        $uniqueUsersWithOccurances[$rangedIDs[$y]]["Occurances"] = $uniqueUsersWithOccurances[$rangedIDs[$y]]["Occurances"] - 11;
+      }
+      if($uniqueUsersWithOccurances[$rangedIDs[$y]]["Occurances"] <= 0) // If user has been used for all of his occuraces, don't use him
         $rangedIDs[$y] = null;
-      if($imageCount == count($imagesArray))
+      if($imageCount == count($imagesArray)) // If all photos for image are set stop the cycle
         break;
 
     }
@@ -175,28 +182,28 @@ function PrepareImagesArray2($dropsCount, $dropSize, $uniqueUsersWithOccurancez,
       break;
   }
 
-  {
+  // {
 
-    echo "imagesArray<pre>";
-    var_export($imagesArray);
-    echo "</pre>";
-
-
-    echo "uniqueUsersWithOccurances<pre>";
-    var_export($uniqueUsersWithOccurances);
-    echo "</pre>";
-
-    echo "userUploadsArray<pre>";
-    var_export($userUploadsArray);
-    echo "</pre>";
+  //   echo "imagesArray<pre>";
+  //   var_export($imagesArray);
+  //   echo "</pre>";
 
 
-    echo "rangedIDs<pre>";
-    var_export($rangedIDs);
-    echo "</pre>";
+  //   echo "uniqueUsersWithOccurances<pre>";
+  //   var_export($uniqueUsersWithOccurances);
+  //   echo "</pre>";
+
+  //   echo "userUploadsArray<pre>";
+  //   var_export($userUploadsArray);
+  //   echo "</pre>";
+
+
+  //   echo "rangedIDs<pre>";
+  //   var_export($rangedIDs);
+  //   echo "</pre>";
   
-    echo "highestOccurance: " . $highestOccurance;
-  }
+  //   echo "highestOccurance: " . $highestOccurance;
+  // }
 
   return $imagesArray;
 }

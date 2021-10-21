@@ -4,7 +4,7 @@ function IndexSettings()
 {
 	return array(
 		// >> DO NOT MODIFY <<
-	    "Version" => "0.1.2_Beta",
+	    "Version" => "0.1.3_Beta",
 		// >> DO NOT MODIFY <<
 		// * Report bug url adress *
 	    "ReportBugUrl" => "../bugs/",
@@ -18,7 +18,7 @@ function AllSettings()
 {
 	return array(
 		// >> DO NOT MODIFY <<
-	    "HomepageURL" => "https://disctrictx.cz/"
+	    "HomepageURL" => "https://michaldemjancuk.cz/"
 	);
 }
 
