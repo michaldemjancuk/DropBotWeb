@@ -14,7 +14,26 @@ $dbot_db = new Dbot_db();
 $dbot_ImgGen_Users = new Dbot_ImgGen_Users();
 
 $db_Data = $dbot_db->GetAll();
+
+$usersMaxCount = $_GET["count"] ?? 100;
+
+if ($usersMaxCount < 5) {
+	$usersMaxCount = 5;
+	echo "<script>alert('Nemá smysl je dělit po méně jak pěti');</script>";
+}
 ?>
+
+<form method="Get">
+	<input type="number" id="counter" name="count" min="5" value="<?php echo $usersMaxCount ?>">
+	<button onclick="GoToMeWithParam()">Filtrovat</button>
+</form>
+
+
+<script type="text/javascript">
+	function GoToMeWithParam() { 
+		window.location.href = window.location.href.split("?")[0] + "?count=" + document.getElementById('counter').value;
+	}
+</script>
 
 <table style="border: 1px solid black;">
     <tr>
@@ -33,6 +52,7 @@ $usersData = $dbot_ImgGen_Users->GetAllWithDbotDbId($db_Data[$db_data_i]['Id']);
 <?php
 for ($i=0; $i < count($usersData); $i++) { 
 	echo $usersData[$i]["Username"] . " ("  . $usersData[$i]["CountOccur"] . ")<br>";
+	if(($i+1)%$usersMaxCount == 0 ) echo "<br>";
 }
 ?>
         </td>

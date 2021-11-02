@@ -4,13 +4,25 @@ function IndexSettings()
 {
 	return array(
 		// >> DO NOT MODIFY <<
-	    "Version" => "0.1.4_Beta",
+	    "Version" => "0.1.5_Beta",
 		// >> DO NOT MODIFY <<
 		// * Report bug url adress *
 	    "ReportBugUrl" => "../bugs/",
 		// >> DO NOT MODIFY <<
 		// * Report bug fail text *
 	    "ErrOccuredBugFile" => "<h2 style='text-align: center'>File content was for unknown reason not passed!</h2>"
+	);
+}
+
+function TwitterCredentials()
+{
+	return array(
+		// API KEY
+		"ApiKey" => "3Q8yWl9tBPYOrv0LzlgNyq8M9",
+		// API PRIVATE KEY
+		"ApiPrivateKey" => "jetS32qMiCVVRK1Q04KYggLVHRxURvsmFGGtvFAa9bKXd9YSAc",
+		// API BEARER TOKEN
+		"ApiBearerKey" => "AAAAAAAAAAAAAAAAAAAAAILwUwEAAAAAHa3QQ71QqC9%2BrVTds%2BsgXpClALg%3DEDmjDFItQvRVtHtvc467PqcAvpXWgVo9bC8L7PSNK8AHyBwjNP"
 	);
 }
 

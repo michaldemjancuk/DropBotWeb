@@ -209,6 +209,7 @@ $suggestedDropsCount = $minSuggested . " up to " . $maxSuggested;
 		},
 		function(data,status){
 			//alert("Update status: " + status);
+        	window.location.href= '<?php echo $thisUrlWithParams; ?>';
 		});
 	}
 

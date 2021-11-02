@@ -7,8 +7,8 @@ include(dirname(__FILE__) . "/../config/Classes/authenticator.php");
 $auth = new Authenticator();
 $auth->Required_Admin("?target=index.php");
 
-$Username = $_POST["Username"];
-$NotGroup = $_POST["NotGroup"];
+$Username = $_POST["Username"] ?? $_GET["Username"];
+$NotGroup = $_POST["NotGroup"] ?? $_GET["NotGroup"];
 
 $usersClass = new Users();
 

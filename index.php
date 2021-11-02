@@ -165,13 +165,21 @@ if($auth->IsAdmin()) { ?>
       </div>
     </div>
     <div style="margin-left: 10px; bottom: 0; position: absolute;">
+      <a href="https://www.toplist.cz/stat/1809509/"><script language="JavaScript" type="text/javascript" charset="utf-8">
+<!--
+document.write('<img src="https://toplist.cz/count.asp?id=1809509&logo=bc&http='+
+encodeURIComponent(document.referrer)+'&t='+encodeURIComponent(document.title)+'&l='+encodeURIComponent(document.URL)+
+'&wi='+encodeURIComponent(window.screen.width)+'&he='+encodeURIComponent(window.screen.height)+'&cd='+
+encodeURIComponent(window.screen.colorDepth)+'" width="88" height="120" border=0 alt="TOPlist" />');
+//--></script><noscript><img src="https://toplist.cz/count.asp?id=1809509&logo=bc&njs=1" border="0"
+alt="TOPlist" width="88" height="120" /></noscript></a>
       <i>
         <!-- <button class="btn btn-danger btn-sm">
           <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-frown'><circle cx='12' cy='12' r='10'/><path d='M16 16s-1.5-2-4-2-4 2-4 2'/><line x1='9' y1='9' x2='9.01' y2='9'/><line x1='15' y1='9' x2='15.01' y2='9'/></svg>
           Nahlásit chybu
         </button><br> -->
         <small>
-          Verze: <?php echo IndexSettings()['Version']; ?><br>
+          <br>Verze: <?php echo IndexSettings()['Version']; ?><br>
           DEV: Michal Demjan&#269;uk<br>
         </small>
       </i>

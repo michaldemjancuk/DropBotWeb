@@ -41,10 +41,9 @@ $imagesArray = PrepareImagesArray($dropsCount, $dropSize, $uniqueUsersWithOccura
 
 shuffle($imagesArray);
 $splittedImages = SplitImagesIntoArrays($imagesArray);
+$splittedImages = SwapEdgeUsers($splittedImages);
 $splittedImages = SwapNotGroupUsers($splittedImages);
-$splittedImages = SwapEdgeUsers($splittedImages);
 $splittedImages = CheckForDuplicitiesInArray($splittedImages);
-$splittedImages = SwapEdgeUsers($splittedImages);
 
 
 for ($i=0; $i < (count($splittedImages) < $dropsCount ? $dropsCount : count($splittedImages)) ; $i++) { 
