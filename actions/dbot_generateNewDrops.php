@@ -18,11 +18,27 @@ if(isset($_GET["ReturnParams"]))
 	$template = $explodedParams[0];
 	$permissionRole = $explodedParams[1];
 }
-
+$uniqueUsers = array();
+$uniqueUsersInactive = array();
+$uniqueUploads = array();
 $thisUrlWithParams = "/actions/dbot_generateNewDrops.php?ReturnParams=".$template."-".$permissionRole;
-$uniqueUsers = $dbot_diu->GetAllUniqueUsersWithPhotoInPermGroup($permissionRole);
-$uniqueUsersInactive = $dbot_diu->GetAllUniqueUsersWithPhotoInPermGroup($permissionRole, 0);
-$uniqueUploads = $dbot_diu->GetAllUniqueUploadsInPermGroup($permissionRole);
+
+if (($permissionRole < 100 && $permissionRole > 0) || $permissionRole = 2122) {
+	$uniqueUsers = $dbot_diu->GetAllUniqueUsersWithPhotoInPermGroup($permissionRole);
+	$uniqueUsersInactive = $dbot_diu->GetAllUniqueUsersWithPhotoInPermGroup($permissionRole, 0);
+	$uniqueUploads = $dbot_diu->GetAllUniqueUploadsInPermGroup($permissionRole);
+	echo "<script>console.log('" . $permissionRole . "');</script>";
+} elseif ($permissionRole > 1000 && $permissionRole < 10000) {
+	$permissionRoles = array(
+		0 => $permissionRole[0].$permissionRole[1], 
+		1 => $permissionRole[2].$permissionRole[3]);
+	for ($i=0; $i < count($permissionRoles); $i++) { 
+		$uniqueUsers = array_merge($uniqueUsers, $dbot_diu->GetAllUniqueUsersWithPhotoInPermGroup($permissionRoles[$i]));
+		$uniqueUsersInactive = array_merge($uniqueUsersInactive, $dbot_diu->GetAllUniqueUsersWithPhotoInPermGroup($permissionRoles[$i], 0));
+		$uniqueUploads = array_merge($uniqueUploads,$dbot_diu->GetAllUniqueUploadsInPermGroup($permissionRoles[$i]));
+	echo "<script>console.log('" . $permissionRoles[$i] . "');</script>";
+	}
+}
 
 switch ($template) {
 	case "4by2_Basic":
@@ -90,7 +106,7 @@ $suggestedDropsCount = $minSuggested . " up to " . $maxSuggested;
 								id="<?php echo $uniqueUsers[$i]['Username']; ?>" 
 								aria-label="User occurances count" 
 								required>
-								<?php $users->GetAllOccurancesSelect($users->GetOccurancesForUser($userName)); ?>
+								<?php $users->GetAllOccurancesSelect($users->GetOccurancesForUserWithPermissionLevel($userName, $permissionRole)); ?>
 							</select>
 						</div>
 						<div class="col-md-1"><b>
@@ -125,7 +141,7 @@ $suggestedDropsCount = $minSuggested . " up to " . $maxSuggested;
 						</b></div>
 						<div class="col-md-3 text-center">
 							<b>
-								<a class="btn btn-sm btn-warning" href="/actions/disableAccount.php?Username=<?php echo $uniqueUsers[$i]['Username']; ?>&BackUrl=<?php echo $thisUrlWithParams; ?>">Disable account</a>
+								<a class="btn btn-sm btn-warning" href="/actions/disableAccount.php?Username=<?php echo $uniqueUsers[$i]['Username']; ?>&PermissionLevel=<?php echo $permissionRole; ?>&BackUrl=<?php echo $thisUrlWithParams; ?>">Disable account</a>
 							</b>
 						</div>
 					</div>
@@ -205,7 +221,8 @@ $suggestedDropsCount = $minSuggested . " up to " . $maxSuggested;
 		$.post("/actions/updateUserOccurances.php",
 		{
 			Username:username,
-			Occurances:occuranceKey
+			Occurances:occuranceKey,
+			PermissionLevel:<?php echo $permissionRole; ?>
 		},
 		function(data,status){
 			//alert("Update status: " + status);
@@ -217,7 +234,8 @@ $suggestedDropsCount = $minSuggested . " up to " . $maxSuggested;
 		$.post("/actions/user_changeEdgeStatus.php",
 		{
 			Username:username,
-			EdgeStatus:edgeStatus
+			EdgeStatus:edgeStatus,
+			PermissionLevel:<?php echo $permissionRole; ?>
 		},
 		function(data,status){
 			//alert("Update status: " + status + " (" + username + "," + edgeStatus + ")");
@@ -239,7 +257,8 @@ $suggestedDropsCount = $minSuggested . " up to " . $maxSuggested;
 		$.post("/actions/user_changeNotGroupStatus.php",
 		{
 			Username:username,
-			NotGroup:notGroupStatus
+			NotGroup:notGroupStatus,
+			PermissionLevel:<?php echo $permissionRole; ?>
 		},
 		function(data,status){
 			//alert("Update status: " + status + " (" + username + "," + notGroupStatus + ")");

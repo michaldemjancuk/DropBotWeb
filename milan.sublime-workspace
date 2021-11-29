@@ -407,7 +407,7 @@
 			"file": "config/settings.php",
 			"settings":
 			{
-				"buffer_size": 1259,
+				"buffer_size": 1634,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -434,7 +434,7 @@
 			"file": "config/Classes/users.php",
 			"settings":
 			{
-				"buffer_size": 8074,
+				"buffer_size": 9753,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -506,7 +506,7 @@
 			"file": "actions/disableAccount.php",
 			"settings":
 			{
-				"buffer_size": 579,
+				"buffer_size": 731,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -560,7 +560,7 @@
 			"file": "actions/updateUserOccurances.php",
 			"settings":
 			{
-				"buffer_size": 490,
+				"buffer_size": 648,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -578,7 +578,7 @@
 			"file": "actions/user_changeEdgeStatus.php",
 			"settings":
 			{
-				"buffer_size": 486,
+				"buffer_size": 641,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -587,7 +587,7 @@
 			"file": "actions/dbot_processImage.php",
 			"settings":
 			{
-				"buffer_size": 11859,
+				"buffer_size": 13447,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -614,7 +614,7 @@
 			"file": "actions/dbot_generateNewDrops.php",
 			"settings":
 			{
-				"buffer_size": 9096,
+				"buffer_size": 10305,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -685,7 +685,7 @@
 			"file": "index.php",
 			"settings":
 			{
-				"buffer_size": 11015,
+				"buffer_size": 11708,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -748,7 +748,7 @@
 			"file": "createDrop.php",
 			"settings":
 			{
-				"buffer_size": 16907,
+				"buffer_size": 17108,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -766,7 +766,7 @@
 			"file": "generatedDrops.php",
 			"settings":
 			{
-				"buffer_size": 16408,
+				"buffer_size": 17113,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -793,7 +793,7 @@
 			"file": "usersUsed.php",
 			"settings":
 			{
-				"buffer_size": 1241,
+				"buffer_size": 1824,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -820,7 +820,7 @@
 			"file": "actions/user_changeNotGroupStatus.php",
 			"settings":
 			{
-				"buffer_size": 484,
+				"buffer_size": 687,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -1411,15 +1411,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1259,
+						"buffer_size": 1634,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								103,
-								103
+								0,
+								0
 							]
 						],
 						"settings":
@@ -1498,15 +1498,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 8074,
+						"buffer_size": 9753,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								7084,
-								6831
+								0,
+								0
 							]
 						],
 						"settings":
@@ -1737,15 +1737,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 579,
+						"buffer_size": 731,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								568,
-								462
+								0,
+								0
 							]
 						],
 						"settings":
@@ -1905,15 +1905,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 490,
+						"buffer_size": 648,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								15,
-								15
+								0,
+								0
 							]
 						],
 						"settings":
@@ -1961,15 +1961,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 486,
+						"buffer_size": 641,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								416,
-								416
+								0,
+								0
 							]
 						],
 						"settings":
@@ -1989,15 +1989,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 11859,
+						"buffer_size": 13447,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2133,
-								2133
+								0,
+								0
 							]
 						],
 						"settings":
@@ -2077,15 +2077,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 9096,
+						"buffer_size": 10305,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								8177,
-								7721
+								0,
+								0
 							]
 						],
 						"settings":
@@ -2310,7 +2310,7 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 11015,
+						"buffer_size": 11708,
 						"regions":
 						{
 						},
@@ -2515,15 +2515,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 16907,
+						"buffer_size": 17108,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								562,
-								562
+								0,
+								0
 							]
 						],
 						"settings":
@@ -2575,15 +2575,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 16408,
+						"buffer_size": 17113,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								364,
-								363
+								0,
+								0
 							]
 						],
 						"settings":
@@ -2691,15 +2691,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1241,
+						"buffer_size": 1824,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								948,
-								948
+								0,
+								0
 							]
 						],
 						"settings":
@@ -2788,15 +2788,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 484,
+						"buffer_size": 687,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								320,
-								320
+								0,
+								0
 							]
 						],
 						"settings":

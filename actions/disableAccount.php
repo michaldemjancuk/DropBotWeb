@@ -8,12 +8,18 @@ $auth = new Authenticator();
 $auth->Required_Admin("?target=index.php");
 
 $Username = $_GET["Username"];
+$PermissionLevel = $_GET["PermissionLevel"];
 $BackUrl = $_GET["BackUrl"];
 
 $usersClass = new Users();
 
-$usersClass
-	->Disable($Username);
+if (isset($PermissionLevel)) {
+	$usersClass
+		->DisableWithPerm($Username, $PermissionLevel);
+} else {
+	$usersClass
+		->Disable($Username);
+}
 
 echo $BackUrl;
 

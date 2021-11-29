@@ -35,18 +35,33 @@ $descClass = new Dbot_Descriptions();
 $dbot_db->Add($permissionRole);
 $dbot_dbId = $dbot_db->GetLast()["Id"];
 
-$uniqueUsersWithOccurances = $dbot_diu->GetAllUniqueUsersWithPhotoInPermGroup($permissionRole);
+$uniqueUsersWithOccurances = array();
+$imagesArray = array();
 
-$imagesArray = PrepareImagesArray($dropsCount, $dropSize, $uniqueUsersWithOccurances, $dbot_diu, $auth);
+if(($permissionRole > 0 && $permissionRole < 100) || $permissionRole == 2122)
+{
+  $uniqueUsersWithOccurances = $dbot_diu->GetAllUniqueUsersWithPhotoInPermGroup($permissionRole);
+  $imagesArray = PrepareImagesArray($dropsCount, $dropSize, $uniqueUsersWithOccurances, $dbot_diu, $auth);
+} elseif ($permissionRole > 1000 && $permissionRole < 10000)
+{
+  $permissionRoles = array(
+    0 => $permissionRole[0].$permissionRole[1], 
+    1 => $permissionRole[2].$permissionRole[3]);
+  for ($i=0; $i < count($permissionRoles); $i++) { 
+    $uniqueUsersWithOccurances = array_merge($uniqueUsersWithOccurances,$dbot_diu->GetAllUniqueUsersWithPhotoInPermGroup($permissionRoles[$i]));
+    $imagesArray = array_merge($imagesArray, PrepareImagesArray($dropsCount, $dropSize, $uniqueUsersWithOccurances, $dbot_diu, $auth));
+  }
+}
 
 shuffle($imagesArray);
 $splittedImages = SplitImagesIntoArrays($imagesArray);
 $splittedImages = SwapEdgeUsers($splittedImages);
 $splittedImages = SwapNotGroupUsers($splittedImages);
 $splittedImages = CheckForDuplicitiesInArray($splittedImages);
+$splittedImages = SwapNotGroupUsers($splittedImages);
 
 
-for ($i=0; $i < (count($splittedImages) < $dropsCount ? $dropsCount : count($splittedImages)) ; $i++) { 
+for ($i=0; $i < $dropsCount; $i++) {   
   $processedImgName = bin2hex(openssl_random_pseudo_bytes(16)) . ".png";
   $root = substr($dirnameThis, 0, strrpos( $dirnameThis, '/'));
   $target_dir = $root . "/dropImageUploadsProcessed/";
@@ -157,6 +172,7 @@ function PrepareImagesArray($dropsCount, $dropSize, $uniqueUsersWithOccurancez, 
       $rangedIDs[count($rangedIDs)] = $i;
     }
   }
+  shuffle($rangedIDs);
 
   for ($i=0; $i <= $highestOccurance+1; $i++) { 
     for ($y=0; $y < count($rangedIDs); $y++) { 

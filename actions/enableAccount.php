@@ -8,12 +8,18 @@ $auth = new Authenticator();
 $auth->Required_Admin("?target=index.php");
 
 $Username = $_GET["Username"];
+$PermissionLevel = $_GET["PermissionLevel"];
 $BackUrl = $_GET["BackUrl"];
 
 $usersClass = new Users();
 
-$usersClass
-	->Enable($Username);
+if (isset($PermissionLevel)) {
+	$usersClass
+		->EnableWithPerm($Username, $PermissionLevel);
+} else {
+	$usersClass
+		->Enable($Username);
+}
 
 echo $BackUrl;
 

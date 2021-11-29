@@ -52,6 +52,9 @@ $dropsData = $drops->GetAllDrops();
                                             <input class="form-control" name="permissionRole" list="datalistOptions" id="exampleDataList" placeholder="Model group selection" required>
                                             <datalist id="datalistOptions">
                                               <option value="20">Free drop</option>
+                                              <option value="21">Free drop (Velký)</option>
+                                              <option value="22">Free (Pages 10K+)</option>
+                                              <option value="2122">21 + 22 (Free drop velký + 10k+)</option>
                                               <option value="23">Paid drop less than 3% - 3 times (Velký 3x)</option>
                                               <option value="24">Paid drop less than 3% - Once (Velký 1x)</option>
                                               <option value="25">Paid drop less than 3% (Velký)</option>
@@ -71,13 +74,20 @@ $dropsData = $drops->GetAllDrops();
                            <!-- end timeline-body -->
                         </li>
                            <?php 
+                            $lastDropId = -1;
                             for ($i = 0; $i < sizeof($dropsData); ++$i) {
+                              if($lastDropId != $dropsData[$i]['dbot_db_Id']) 
+                                echo 
+'<div class="bg-dark rounded text-light text-center" id="breaker-1">
+Id: ' . $dropsData[$i]['dbot_db_Id'] . ' | Datetime generated: ' . $dropsData[$i]['Created'] . '
+</div>';
                               $drops->BuildPost(
                                  $dropsData[$i]['Id'],
                                  $dropsData[$i]['Created'],
                                  $dropsData[$i]['LocalUrl'],
                                  utf8_decode($dropsData[$i]['Description'])
                               );
+                              $lastDropId = $dropsData[$i]['dbot_db_Id'];
                            }
                            ?>
                      </ul>

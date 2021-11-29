@@ -61,7 +61,7 @@ $permissionLevelsList = $users->GetPermissionLevelsFromTable();
 						<?php } ?>
 					</b></div>
 					<div class="col-md-3"><b>
-						<select class="form-control access-groups-select" id="<?php echo $usersData[$i]['Username']; ?>" placeholder="Permission level">
+						<select class="form-control access-groups-select" id="<?php echo $usersData[$i]['Id']; ?>" placeholder="Permission level">
 <?php for ($y=0; $y < count($permissionLevelsList); $y++) { 
 	if($permissionLevelsList[$y][0] == $usersData[$i]['PermissionLevel']) { ?>
 			<option value="<?php echo $permissionLevelsList[$y][0]; ?>" selected>
@@ -161,7 +161,7 @@ $permissionLevelsList = $users->GetPermissionLevelsFromTable();
 	function changeAccessGroup(username,permissionLevel) {
 		$.post("/actions/updateUserAccessGroup.php",
 		{
-			Username:username,
+			Id:username,
 			PermissionLevel:permissionLevel
 		},
 		function(data,status){

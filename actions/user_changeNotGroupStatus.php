@@ -9,11 +9,16 @@ $auth->Required_Admin("?target=index.php");
 
 $Username = $_POST["Username"] ?? $_GET["Username"];
 $NotGroup = $_POST["NotGroup"] ?? $_GET["NotGroup"];
+$PermissionLevel = $_POST["PermissionLevel"];
 
 $usersClass = new Users();
 
+if(!isset($PermissionLevel))
 $usersClass
-	->UpdateNotGroupStatus($Username, $NotGroup);
+	->UpdateNotGroupStatus($Username, $EdgeStatus);
+else
+$usersClass
+	->UpdateNotGroupStatus($Username, $EdgeStatus, $PermissionLevel);
 
 exit();
 ?>

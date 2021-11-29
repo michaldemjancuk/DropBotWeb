@@ -96,31 +96,58 @@ class Users
 		return $data[0][0];
 	}
 
-	public function SetOccuranceForUser($Username, $Occurance)
+	public function GetOccurancesForUserWithPermissionLevel($Username, $PermissionLevel)
 	{
-		$dbConn = new DbConn();
+		$dbConn = new DbConn(); 
 		$pdo = $dbConn->GetConnection();
-		$sql = "UPDATE users SET Occurances = ? Where Username = ?";
-		$stmt= $pdo->prepare($sql);
-		$stmt->execute([$Occurance, $Username]);
+		$data = $pdo->query("SELECT Occurances FROM users WHERE Username = '" . $Username . "' AND PermissionLevel = '" . $PermissionLevel . "'")->fetchAll();
+		return $data[0][0];
 	}
 
-	public function UpdateEdgeStatus($Username, $EdgeStatus)
+	public function SetOccuranceForUser($Username, $Occurance, $PermissionLevel = null)
 	{
 		$dbConn = new DbConn();
 		$pdo = $dbConn->GetConnection();
-		$sql = "UPDATE users SET OnTheEdge = ? Where Username = ?";
-		$stmt= $pdo->prepare($sql);
-		$stmt->execute([$EdgeStatus, $Username]);
+		if (isset($PermissionLevel)) {
+			$sql = "UPDATE users SET Occurances = ? Where Username = ? AND PermissionLevel = ?";
+			$stmt= $pdo->prepare($sql);
+			$stmt->execute([$Occurance, $Username, $PermissionLevel]);
+		} else {
+			$sql = "UPDATE users SET Occurances = ? Where Username = ?";
+			$stmt= $pdo->prepare($sql);
+			$stmt->execute([$Occurance, $Username]);
+		}
 	}
 
-	public function UpdateNotGroupStatus($Username, $NotGroup)
+	public function UpdateEdgeStatus($Username, $EdgeStatus, $PermissionLevel = null)
 	{
 		$dbConn = new DbConn();
 		$pdo = $dbConn->GetConnection();
-		$sql = "UPDATE users SET NotGroup = ? Where Username = ?";
-		$stmt= $pdo->prepare($sql);
-		$stmt->execute([$NotGroup, $Username]);
+		if (isset($PermissionLevel)) {
+			$sql = "UPDATE users SET OnTheEdge = ? Where Username = ? AND PermissionLevel = ?";
+			$stmt= $pdo->prepare($sql);
+			$stmt->execute([$EdgeStatus, $Username, $PermissionLevel]);
+		}
+		else{
+			$sql = "UPDATE users SET OnTheEdge = ? Where Username = ?";
+			$stmt= $pdo->prepare($sql);
+			$stmt->execute([$EdgeStatus, $Username]);
+		}
+	}
+
+	public function UpdateNotGroupStatus($Username, $NotGroup, $PermissionLevel = null)
+	{
+		$dbConn = new DbConn();
+		$pdo = $dbConn->GetConnection();
+		if(isset($PermissionLevel)){
+			$sql = "UPDATE users SET NotGroup = ? Where Username = ? AND $PermissionLevel = ?";
+			$stmt= $pdo->prepare($sql);
+			$stmt->execute([$NotGroup, $Username, $PermissionLevel]);
+		}else{
+			$sql = "UPDATE users SET NotGroup = ? Where Username = ?";
+			$stmt= $pdo->prepare($sql);
+			$stmt->execute([$NotGroup, $Username]);
+		}
 	}
 
 	public function GetAllOccurancesSelect($KeySelected = '')
@@ -177,6 +204,15 @@ class Users
 		$stmt->execute([$Username]);
 	}
 
+	public function EnableWithPerm($Username, $PermissionLevel)
+	{
+		$dbConn = new DbConn();
+		$pdo = $dbConn->GetConnection();
+		$sql = "UPDATE users SET Active = 1 Where Username = ? AND PermissionLevel = ?";
+		$stmt= $pdo->prepare($sql);
+		$stmt->execute([$Username, $PermissionLevel]);
+	}
+
 	public function Disable($Username)
 	{
 		$dbConn = new DbConn();
@@ -184,6 +220,15 @@ class Users
 		$sql = "UPDATE users SET Active = 0 Where Username = ?";
 		$stmt= $pdo->prepare($sql);
 		$stmt->execute([$Username]);
+	}
+
+	public function DisableWithPerm($Username, $PermissionLevel)
+	{
+		$dbConn = new DbConn();
+		$pdo = $dbConn->GetConnection();
+		$sql = "UPDATE users SET Active = 0 Where Username = ? AND PermissionLevel = ?";
+		$stmt= $pdo->prepare($sql);
+		$stmt->execute([$Username, $PermissionLevel]);
 	}
 
 	public function VerifiedLogin($username, $Hash)
@@ -221,13 +266,13 @@ class Users
 		return $data;
 	}
 
-	public function SetRightsPermissionGroup($Username, $PermissionLevel)
+	public function SetRightsPermissionGroup($Id, $PermissionLevel)
 	{
 		$dbConn = new DbConn();
 		$pdo = $dbConn->GetConnection();
-		$sql = "UPDATE users SET PermissionLevel = ? Where Username = ?";
+		$sql = "UPDATE users SET PermissionLevel = ? Where Id = ?";
 		$stmt= $pdo->prepare($sql);
-		$stmt->execute([$PermissionLevel, $Username]);
+		$stmt->execute([$PermissionLevel, $Id]);
 	}
 
 	public function GetProfileImageUrlByUsername($username)
